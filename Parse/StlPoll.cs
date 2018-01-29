@@ -65,7 +65,8 @@ namespace SS.Poll.Parse
 
             Main.ItemDao.AddCount(pollId, itemIds);
 
-            var itemInfoList = Main.ItemDao.GetItemInfoList(pollId, out int totalCount);
+            int totalCount;
+            var itemInfoList = Main.ItemDao.GetItemInfoList(pollId, out totalCount);
             var items = new List<object>();
             foreach (var itemInfo in itemInfoList)
             {

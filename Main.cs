@@ -179,7 +179,8 @@ namespace SS.Poll
                         };
                         pollInfo.Id = PollDao.Insert(pollInfo);
                     }
-                    var itemInfoList = ItemDao.GetItemInfoList(pollInfo.Id, out int totalCount);
+                    int totalCount;
+                    var itemInfoList = ItemDao.GetItemInfoList(pollInfo.Id, out totalCount);
 
                     return new
                     {
