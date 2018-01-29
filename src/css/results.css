@@ -1,0 +1,67 @@
+@charset "UTF-8";
+
+.animate { -webkit-transition: all 0.5s ease-in-out 0s; -moz-transition: all 0.5s ease-in-out 0s; -ms-transition: all 0.5s ease-in-out 0s; -o-transition: all 0.5s ease-in-out 0s; transition: all 0.5s ease-in-out 0s; }
+
+::-webkit-input-placeholder { font-size: 14px; color: #6c6c6c; }
+
+.results_wrap { margin: 0; padding: 0; width: 100%; min-width: 1060px; overflow: hidden; font-family: '微软雅黑', 'Open Sans', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'STHeiti', 'WenQuanYi Micro Hei', SimSun, sans-serif; font-size: 14px; font-style: normal; line-height: 22px; font-weight: normal; font-variant: normal; color: #333333; background: #fff; }
+
+.results_wrap ul, .results_wrap dl, .results_wrap dd, .results_wrap dt, .results_wrap ol, .results_wrap li, .results_wrap p, .results_wrap h1, .results_wrap h2, .results_wrap h3, .results_wrap h4, .results_wrap h5, .results_wrap h6, .results_wrap form, .results_wrap fieldset, .results_wrap table, .results_wrap img, .results_wrap td, .results_wrap div, .results_wrap input { margin: 0; padding: 0; }
+
+.w1060 { margin: 0; padding: 0; width: 1060px; margin: 0 auto; overflow: hidden; }
+
+.results_wrap .vote1_cont { margin: 0 90px; border-bottom: 2px solid #eaedf0; }
+
+.results_wrap .vote1_title { font-size: 26px; padding: 35px 0; color: #797979; }
+
+.results_wrap .vote1_title span { margin-right: 50px; }
+
+.results_wrap .vote1_img { width: 112px; float: left; margin-right: 75px; }
+
+.results_wrap .vote1_img img { width: 112px; height: 112px; border-radius: 50%; }
+
+.results_wrap .vote1_img p { font-size: 16px; text-align: center; padding: 20px 0; }
+
+.results_wrap .vote1_num { font-size: 22px; padding-top: 40px; float: left; margin-right: 55px; }
+
+.results_wrap .vote1_plan { width: 400px; height: 22px; background: #e3e4e6; float: left; margin-top: 40px; border-radius: 11px; overflow: hidden; }
+
+.results_wrap .vote1_plan span { height: 22px; background: #29a5fb; float: left; }
+
+.results_wrap .vote1_percent { font-size: 30px; margin-left: 40px; float: left; padding-top: 40px; }
+
+.results_wrap .vote1_cont li { overflow: hidden; }
+
+.results_wrap .vote1_text { float: left; width: 180px; font-size: 18px; margin-right: 30px; padding: 70px 0; }
+
+.results_wrap .vote1_cont1 li { border-bottom: 1px solid #eaedf0; }
+
+.results_wrap .vote1_cont1 .vote1_title { padding: 35px 0 0; }
+
+.results_wrap .vote1_cont1 .vote1_num, .vote1_cont1 .vote1_percent { padding-top: 82px; }
+
+.results_wrap .vote1_cont1 .vote1_plan { margin-top: 82px; }
+
+.results_wrap .vote1_download { font-size: 22px; color: #fff; width: 295px; height: 43px; line-height: 43px; background: #f17818; display: block; text-align: center; border-radius: 5px; float: right; margin-top: 50px; margin-right: 90px; }
+
+.results_wrap .vote1_download:hover { color: #fff !important; text-decoration: underline; }
+
+@media (max-width: 640px) and (min-width: 320px) { .results_wrap { margin: 0; padding: 0; min-width: 100%; }
+  .results_wrap img { margin: 0; padding: 0; width: 100% !important; height: auto !important; }
+  .results_wrap .vote1_cont { margin: 0 10px; }
+  .results_wrap .vote1_title { font-size: 18px; padding: 20px 0; }
+  .results_wrap .vote1_title span { margin-right: 20px; }
+  .results_wrap .vote1_img { width: 60px; margin-right: 15px; }
+  .results_wrap .vote1_img p { font-size: 14px; padding: 10px 0; }
+  .results_wrap .vote1_num { padding-top: 0; font-size: 18px; }
+  .results_wrap .vote1_plan { width: 200px; height: 15px; margin-top: 10px; }
+  .results_wrap .vote1_percent { padding-top: 10px; font-size: 20px; margin-left: 0; }
+  .results_wrap .vote1_cont li { border-bottom: 1px solid #eaedf0; margin-bottom: 10px; }
+  .results_wrap .vote1_text { width: 90%; margin: 0 auto; padding: 10px 0; float: none; }
+  .results_wrap .vote1_cont1 li { padding-bottom: 10px; }
+  .results_wrap .vote1_cont1 .vote1_num, .vote1_cont1 .vote1_percent { padding-top: 10px; margin-left: 5%; }
+  .results_wrap .vote1_cont1 .vote1_plan { margin-top: 10px; margin-left: 5%; }
+  .results_wrap .vote1_cont1 .vote1_percent { width: 100%; }
+  .results_wrap .vote1_download { float: none; width: 90%; margin: 0 auto; font-size: 18px; } }
+
+/*# sourceMappingURL=other_public.css.map */
