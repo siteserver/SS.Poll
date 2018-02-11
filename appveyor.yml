@@ -48,6 +48,9 @@
     only:
       - dev
 
+  environment:
+    PUBLIC_URL: ./
+
   version: 1.1.{build}-beta
 
   assembly_info:
@@ -77,7 +80,7 @@
 
   before_build:
     - nuget restore SS.Poll.sln
-    - PUBLIC_URL=./ npm run build
+    - npm run build
 
   build:
     project: SS.Poll.sln       # path to Visual Studio solution or project
