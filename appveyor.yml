@@ -68,7 +68,7 @@
 
   install:
     - ps: Install-Product node $env:nodejs_version
-    - cd reactjs && npm install
+    - npm install
 
   skip_tags: true
 

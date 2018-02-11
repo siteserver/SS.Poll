@@ -15,4 +15,7 @@
     <copyright>Copyright 2018</copyright>
     <tags>SiteServer CMS Poll Plugin</tags>
   </metadata>
+  <files>
+    <file src="build\**" target="Content\build"/>
+  </files>
 </package>
