@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -16,13 +15,8 @@ using SS.Poll.Provider;
 
 namespace SS.Poll
 {
-    public class Main : IPlugin
+    public class Main : PluginBase
     {
-        public static string ConnectionString { get; private set; }
-        public static IDataApi DataApi { get; private set; }
-        public static IAdminApi AdminApi { get; private set; }
-        public static IFilesApi FilesApi { get; private set; }
-
         public static Dao Dao { get; private set; }
         public static PollDao PollDao { get; private set; }
         public static ItemDao ItemDao { get; private set; }
@@ -30,12 +24,11 @@ namespace SS.Poll
         public static FieldDao FieldDao { get; private set; }
         public static FieldItemDao FieldItemDao { get; private set; }
 
-        public void Startup(IContext context, IService service)
+        internal static Main Instance { get; private set; }
+
+        public override void Startup(IService service)
         {
-            ConnectionString = context.Environment.ConnectionString;
-            DataApi = context.DataApi;
-            AdminApi = context.AdminApi;
-            FilesApi = context.FilesApi;
+            Instance = this;
 
             Dao = new Dao(ConnectionString, DataApi);
             PollDao = new PollDao(ConnectionString, DataApi);
@@ -45,28 +38,15 @@ namespace SS.Poll
             FieldItemDao = new FieldItemDao(ConnectionString, DataApi);
 
             service
-                .AddContentLinks(new List<HyperLink>
+                .AddContentLink(new HyperLink
                 {
-                    //new PluginContentLink
-                    //{
-                    //    Text = "编辑投票",
-                    //    Href = "http://localhost:3000?pageType=edit_items"
-                    //},
-                    //new PluginContentLink
-                    //{
-                    //    Text = "查看投票",
-                    //    Href = "http://localhost:3000?pageType=view_items"
-                    //}
-                    new HyperLink
-                    {
-                        Text = "编辑投票",
-                        NavigateUrl = "build/index.html"
-                    },
-                    new HyperLink
-                    {
-                        Text = "查看投票",
-                        NavigateUrl = $"{nameof(PageResults)}.aspx"
-                    }
+                    Text = "编辑投票",
+                    NavigateUrl = "build/index.html"
+                })
+                .AddContentLink(new HyperLink
+                {
+                    Text = "查看投票",
+                    NavigateUrl = $"{nameof(PageResults)}.aspx"
                 })
                 .AddDatabaseTable(PollDao.TableName, PollDao.Columns)
                 .AddDatabaseTable(ItemDao.TableName, ItemDao.Columns)
@@ -97,10 +77,12 @@ namespace SS.Poll
             service.ApiGet += (sender, args) =>
             {
                 var request = args.Request;
+                var action = args.Action;
+                var id = args.Id;
 
-                if (!string.IsNullOrEmpty(args.Name) && !string.IsNullOrEmpty(args.Id))
+                if (!string.IsNullOrEmpty(action) && !string.IsNullOrEmpty(id))
                 {
-                    if (args.Name == "code")
+                    if (action == "code")
                     {
                         var response = new HttpResponseMessage();
 
@@ -141,12 +123,12 @@ namespace SS.Poll
 
                         return response;
                     }
-                    if (args.Name == "logs")
+                    if (action == "logs")
                     {
                         var limit = request.GetQueryInt("limit");
                         var offset = request.GetQueryInt("offset");
 
-                        var pollId = Convert.ToInt32(args.Id);
+                        var pollId = Convert.ToInt32(id);
 
                         var totalCount = LogDao.GetCount(pollId);
                         var logs = LogDao.GetPollLogInfoList(pollId, totalCount, limit, offset);
@@ -158,7 +140,7 @@ namespace SS.Poll
                         };
                     }
                 }
-                if (string.IsNullOrEmpty(args.Name) && string.IsNullOrEmpty(args.Id))
+                if (string.IsNullOrEmpty(action) && string.IsNullOrEmpty(id))
                 {
                     var siteId = request.GetQueryInt("siteId");
                     var channelId = request.GetQueryInt("channelId");
@@ -195,9 +177,12 @@ namespace SS.Poll
 
             service.ApiDelete += (sender, args) =>
             {
-                if (!string.IsNullOrEmpty(args.Name) && !string.IsNullOrEmpty(args.Id) && args.Name == "item")
+                var action = args.Action;
+                var id = args.Id;
+
+                if (!string.IsNullOrEmpty(action) && !string.IsNullOrEmpty(args.Id) && action == "item")
                 {
-                    var itemId = Convert.ToInt32(args.Id);
+                    var itemId = Convert.ToInt32(id);
                     ItemDao.Delete(itemId);
                     return new {};
                 }
@@ -208,19 +193,21 @@ namespace SS.Poll
             service.ApiPost += (sender, args) =>
             {
                 var request = args.Request;
+                var action = args.Action;
+                var id = args.Id;
 
-                if (!string.IsNullOrEmpty(args.Name) && !string.IsNullOrEmpty(args.Id))
+                if (!string.IsNullOrEmpty(action) && !string.IsNullOrEmpty(id))
                 {
-                    if (Utils.EqualsIgnoreCase(args.Name, nameof(StlPoll.ApiSubmit)))
+                    if (Utils.EqualsIgnoreCase(action, nameof(StlPoll.ApiSubmit)))
                     {
-                        return StlPoll.ApiSubmit(request, args.Id);
+                        return StlPoll.ApiSubmit(request, id);
                     }
                 }
-                if (!string.IsNullOrEmpty(args.Name))
+                if (!string.IsNullOrEmpty(action))
                 {
                     var siteId = request.GetQueryInt("siteId");
 
-                    if (args.Name.ToLower() == "item")
+                    if (action.ToLower() == "item")
                     {
                         var itemInfo = new ItemInfo
                         {
@@ -236,7 +223,7 @@ namespace SS.Poll
 
                         return itemInfo;
                     }
-                    if (args.Name.ToLower() == "image")
+                    if (action.ToLower() == "image")
                     {
                         var errorMessage = string.Empty;
                         var imageUrl = string.Empty;
@@ -281,10 +268,12 @@ namespace SS.Poll
             service.ApiPut += (sender, args) =>
             {
                 var request = args.Request;
+                var action = args.Action;
+                var id = args.Id;
 
-                if (!string.IsNullOrEmpty(args.Name) && !string.IsNullOrEmpty(args.Id))
+                if (!string.IsNullOrEmpty(action) && !string.IsNullOrEmpty(id))
                 {
-                    var pollId = Convert.ToInt32(args.Id);
+                    var pollId = Convert.ToInt32(id);
 
                     //if (name.ToLower() == "poll")
                     //{
@@ -305,7 +294,7 @@ namespace SS.Poll
 
                     //    return pollInfo;
                     //}
-                    if (args.Name.ToLower() == "item")
+                    if (action.ToLower() == "item")
                     {
                         var itemInfo = ItemDao.GetItemInfo(pollId);
 

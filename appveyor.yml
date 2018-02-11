@@ -4,7 +4,7 @@
     only:
       - master
 
-  version: 1.0.{build}
+  version: 1.1.{build}
 
   assembly_info:
     patch: true
@@ -63,7 +63,12 @@
     - Release
 
   environment:
+    nodejs_version: "6"
     TreatWarningsAsErrors: false
+
+  install:
+    - ps: Install-Product node $env:nodejs_version
+    - cd reactjs && npm install
 
   skip_tags: true
 
@@ -72,13 +77,14 @@
 
   before_build:
     - nuget restore SS.Poll.sln
+    - PUBLIC_URL=./ npm run build
 
   build:
     project: SS.Poll.sln       # path to Visual Studio solution or project
     publish_nuget: true
 
   artifacts:
-    - path: '*.nupkg'
+    - path: '**/*.nupkg'
 
   deploy:
     - provider: NuGet
@@ -88,3 +94,11 @@
       skip_symbols: false
       symbol_server:           # remove to push symbols to SymbolSource.org
       artifact: /.*\.nupkg/
+
+  notifications:
+    - provider: Webhook
+      url: http://api.siteserver.cn/v1.0/packages/SS.Poll?isNightly=true
+      headers:
+        X-SiteServer-ApiKey:
+          secure: BgJi7I52wZsaeoldjE1txzqjNWIqDwUUYzH5VFoVrZUW2NlSocZlSl1uXKE2PQut
+      on_build_success: true

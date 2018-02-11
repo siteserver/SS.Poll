@@ -58,7 +58,7 @@ namespace SS.Poll.Core
 
         public static void Export(string relatedPath, List<string> head, List<List<string>> rows)
         {
-            var filePath = Main.FilesApi.GetTemporaryFilesPath(relatedPath);
+            var filePath = Main.Instance.FilesApi.GetTemporaryFilesPath(relatedPath);
             DeleteFileIfExists(filePath);
 
             var builder = new StringBuilder();

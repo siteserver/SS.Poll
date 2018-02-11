@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SiteServer.Plugin, Version=1.2.21.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\SiteServer.Plugin.1.2.21-beta\lib\net45\SiteServer.Plugin.dll</HintPath>
+    <Reference Include="SiteServer.Plugin, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\SiteServer.Plugin.1.3.0\lib\net45\SiteServer.Plugin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -86,13 +86,73 @@
     <Compile Include="Provider\LogDao.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\plugin-utils\fonts\fontawesome-webfont.eot" />
+    <None Include="assets\plugin-utils\fonts\fontawesome-webfont.ttf" />
+    <None Include="assets\plugin-utils\fonts\fontawesome-webfont.woff" />
+    <None Include="assets\plugin-utils\fonts\fontawesome-webfont.woff2" />
+    <None Include="assets\plugin-utils\fonts\FontAwesome.otf" />
+    <None Include="assets\plugin-utils\fonts\ionicons.eot" />
+    <None Include="assets\plugin-utils\fonts\ionicons.ttf" />
+    <None Include="assets\plugin-utils\fonts\ionicons.woff" />
+    <None Include="build\asset-manifest.json" />
+    <None Include="build\manifest.json" />
+    <None Include="build\static\css\main.647e1953.css.map" />
+    <None Include="build\static\js\main.ff0d5bca.js.map" />
+    <None Include="build\static\media\fontawesome-webfont.674f50d2.eot" />
+    <None Include="build\static\media\fontawesome-webfont.af7ae505.woff2" />
+    <None Include="build\static\media\fontawesome-webfont.b06871f2.ttf" />
+    <None Include="build\static\media\fontawesome-webfont.fee66e71.woff" />
+    <None Include="build\static\media\glyphicons-halflings-regular.448c34a5.woff2" />
+    <None Include="build\static\media\glyphicons-halflings-regular.e18bbf61.ttf" />
+    <None Include="build\static\media\glyphicons-halflings-regular.f4769f9b.eot" />
+    <None Include="build\static\media\glyphicons-halflings-regular.fa277232.woff" />
+    <None Include="build\static\media\ionicons.05acfdb5.woff" />
+    <None Include="build\static\media\ionicons.24712f6c.ttf" />
+    <None Include="build\static\media\ionicons.2c2ae068.eot" />
     <None Include="packages.config" />
     <None Include="plugin.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="assets\datePicker\calendar.js" />
+    <Content Include="assets\datePicker\lang\en.js" />
+    <Content Include="assets\datePicker\lang\zh-cn.js" />
+    <Content Include="assets\datePicker\lang\zh-tw.js" />
+    <Content Include="assets\datePicker\skin\datePicker.gif" />
+    <Content Include="assets\datePicker\skin\default\datepicker.css" />
+    <Content Include="assets\datePicker\skin\default\img.gif" />
+    <Content Include="assets\datePicker\skin\WdatePicker.css" />
+    <Content Include="assets\datePicker\skin\whyGreen\bg.jpg" />
+    <Content Include="assets\datePicker\skin\whyGreen\datepicker.css" />
+    <Content Include="assets\datePicker\skin\whyGreen\img.gif" />
+    <Content Include="assets\datePicker\WdatePicker.js" />
+    <Content Include="assets\js\jquery.min.js" />
+    <Content Include="assets\js\vee-validate.js" />
+    <Content Include="assets\js\vue-2.1.10.min.js" />
+    <Content Include="assets\plugin-utils\css\bootstrap.min.css" />
+    <Content Include="assets\plugin-utils\css\font-awesome.min.css" />
+    <Content Include="assets\plugin-utils\css\ionicons.min.css" />
+    <Content Include="assets\plugin-utils\css\plugin-utils.css" />
+    <Content Include="assets\plugin-utils\fonts\fontawesome-webfont.svg" />
+    <Content Include="assets\plugin-utils\fonts\ionicons.svg" />
+    <Content Include="assets\plugin-utils\js\bootstrap.min.js" />
+    <Content Include="assets\plugin-utils\js\jquery.min.js" />
+    <Content Include="assets\plugin-utils\js\plugin-utils.js" />
+    <Content Include="build\index.html" />
+    <Content Include="build\logo.svg" />
+    <Content Include="build\service-worker.js" />
+    <Content Include="build\static\css\main.647e1953.css" />
+    <Content Include="build\static\js\main.ff0d5bca.js" />
+    <Content Include="build\static\media\fontawesome-webfont.acf3dcb7.svg" />
+    <Content Include="build\static\media\glyphicons-halflings-regular.89889688.svg" />
+    <Content Include="build\static\media\ionicons.c037dbbc.svg" />
+    <Content Include="css\base.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="js\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

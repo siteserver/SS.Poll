@@ -35,11 +35,11 @@ namespace SS.Poll.Pages
         public static string GetRedirectUrl(string apiUrl, int siteId, int channelId, int contentId, string returnUrl)
         {
             return
-                Main.FilesApi.GetPluginUrl(
+                Main.Instance.PluginApi.GetPluginUrl(
                     $"{nameof(PageSettings)}.aspx?apiUrl={HttpUtility.UrlEncode(apiUrl)}&siteId={siteId}&channelId={channelId}&contentId={contentId}&returnUrl={HttpUtility.UrlEncode(returnUrl)}");
         }
 
-        public string UrlEditItems => Main.FilesApi.GetPluginUrl($"build/index.html?pageType=edit_items&apiUrl={HttpUtility.UrlEncode(_apiUrl)}&siteId={_siteId}&channelId={_channelId}&contentId={_contentId}&returnUrl={HttpUtility.UrlEncode(_returnUrl)}");
+        public string UrlEditItems => Main.Instance.PluginApi.GetPluginUrl($"build/index.html?pageType=edit_items&apiUrl={HttpUtility.UrlEncode(_apiUrl)}&siteId={_siteId}&channelId={_channelId}&contentId={_contentId}&returnUrl={HttpUtility.UrlEncode(_returnUrl)}");
 
         public string UrlEditFields
             => PageFields.GetRedirectUrl(_apiUrl, _siteId, _channelId, _contentId, _returnUrl);
@@ -54,7 +54,7 @@ namespace SS.Poll.Pages
             _contentId = Convert.ToInt32(Request.QueryString["contentId"]);
             _returnUrl = HttpUtility.UrlDecode(Request.QueryString["returnUrl"]);
 
-            if (!Main.AdminApi.IsSiteAuthorized(_siteId))
+            if (!Main.Instance.AdminApi.IsSiteAuthorized(_siteId))
             {
                 Response.Write("<h1>未授权访问</h1>");
                 Response.End();

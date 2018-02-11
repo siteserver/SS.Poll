@@ -27,7 +27,7 @@ namespace SS.Poll.Pages
         public static string GetRedirectUrl(string apiUrl, int siteId, int channelId, int contentId, string returnUrl)
         {
             return
-                Main.FilesApi.GetPluginUrl(
+                Main.Instance.PluginApi.GetPluginUrl(
                     $"{nameof(PageResults)}.aspx?apiUrl={HttpUtility.UrlEncode(apiUrl)}&siteId={siteId}&channelId={channelId}&contentId={contentId}&returnUrl={HttpUtility.UrlEncode(returnUrl)}");
         }
 
@@ -44,7 +44,7 @@ namespace SS.Poll.Pages
             _returnUrl = HttpUtility.UrlDecode(Request.QueryString["returnUrl"]);
             _pollInfo = Main.PollDao.GetPollInfo(_siteId, _channelId, _contentId);
 
-            if (!Main.AdminApi.IsSiteAuthorized(_siteId))
+            if (!Main.Instance.AdminApi.IsSiteAuthorized(_siteId))
             {
                 Response.Write("<h1>未授权访问</h1>");
                 Response.End();
@@ -95,9 +95,9 @@ namespace SS.Poll.Pages
 
             var relatedPath = "投票统计.csv";
 
-            CsvUtils.Export(Main.FilesApi.GetPluginPath(relatedPath), head, rows);
+            CsvUtils.Export(Main.Instance.PluginApi.GetPluginPath(relatedPath), head, rows);
 
-            HttpContext.Current.Response.Redirect(Main.FilesApi.GetPluginUrl(relatedPath));
+            HttpContext.Current.Response.Redirect(Main.Instance.PluginApi.GetPluginUrl(relatedPath));
         }
 
         private void RptItems_ItemDataBound(object sender, RepeaterItemEventArgs e)
