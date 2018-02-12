@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Data;
-using SS.Poll.Model;
+using SS.Poll.Models;
 
 namespace SS.Poll.Core
 {

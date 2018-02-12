@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using SiteServer.Plugin;
 using SS.Poll.Core;
-using SS.Poll.Model;
+using SS.Poll.Models;
 
 namespace SS.Poll.Parse
 {

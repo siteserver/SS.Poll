@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 using SS.Poll.Core;
-using SS.Poll.Model;
 using System.Collections.Generic;
+using SS.Poll.Models;
 
 namespace SS.Poll.Pages
 {
-    public class PageResults : Page
+    public class PageResults : PageBase
     {
         public Literal LtlMessage;
         public Repeater RptItems;
@@ -16,44 +15,20 @@ namespace SS.Poll.Pages
 
         public Literal LtlScript;
 
-        private string _apiUrl;
-        private int _siteId;
-        private int _channelId;
-        private int _contentId;
-        private string _returnUrl;
-        private PollInfo _pollInfo;
         private int _totalCount;
 
-        public static string GetRedirectUrl(string apiUrl, int siteId, int channelId, int contentId, string returnUrl)
+        public static string GetRedirectUrl(int siteId, int channelId, int contentId, string returnUrl)
         {
             return
                 Main.Instance.PluginApi.GetPluginUrl(
-                    $"{nameof(PageResults)}.aspx?apiUrl={HttpUtility.UrlEncode(apiUrl)}&siteId={siteId}&channelId={channelId}&contentId={contentId}&returnUrl={HttpUtility.UrlEncode(returnUrl)}");
+                    $"{nameof(PageResults)}.aspx?siteId={siteId}&channelId={channelId}&contentId={contentId}&returnUrl={HttpUtility.UrlEncode(returnUrl)}");
         }
-
-        public string UrlPageLogs => PageLogs.GetRedirectUrl(_apiUrl, _siteId, _channelId, _contentId, _returnUrl);
-
-        public string UrlReturn => _returnUrl;
 
         public void Page_Load(object sender, EventArgs e)
         {
-            _apiUrl = HttpUtility.UrlDecode(Request.QueryString["apiUrl"]);
-            _siteId = Convert.ToInt32(Request.QueryString["siteId"]);
-            _channelId = Convert.ToInt32(Request.QueryString["channelId"]);
-            _contentId = Convert.ToInt32(Request.QueryString["contentId"]);
-            _returnUrl = HttpUtility.UrlDecode(Request.QueryString["returnUrl"]);
-            _pollInfo = Main.PollDao.GetPollInfo(_siteId, _channelId, _contentId);
-
-            if (!Main.Instance.AdminApi.IsSiteAuthorized(_siteId))
-            {
-                Response.Write("<h1>未授权访问</h1>");
-                Response.End();
-                return;
-            }
-
             if (IsPostBack) return;
 
-            var items = Main.ItemDao.GetItemInfoList(_pollInfo.Id, out _totalCount);
+            var items = Main.ItemDao.GetItemInfoList(PollInfo.Id, out _totalCount);
 
             RptItems.DataSource = items;
             RptItems.ItemDataBound += RptItems_ItemDataBound;
@@ -63,7 +38,7 @@ namespace SS.Poll.Pages
         public void BtnExport_Click(object sender, EventArgs e)
         {
             int totalCount;
-            var itemInfoList = Main.ItemDao.GetItemInfoList(_pollInfo.Id, out totalCount);
+            var itemInfoList = Main.ItemDao.GetItemInfoList(PollInfo.Id, out totalCount);
 
             var head = new List<string> { "序号", "标题", "票数", "占比" };
 
@@ -123,7 +98,7 @@ namespace SS.Poll.Pages
                 percent = Math.Round(d, 2);
             }
 
-            if (_pollInfo.IsImage)
+            if (PollInfo.IsImage)
             {
                 ltlImage.Text = $@"<img src=""{itemInfo.ImageUrl}"" class=""img-responsive img-circle"" style=""height: 72px;width: 72px;float: left;"">";
             }

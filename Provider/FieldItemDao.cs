@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
 using SiteServer.Plugin;
-using SS.Poll.Model;
+using SS.Poll.Models;
 
 namespace SS.Poll.Provider
 {

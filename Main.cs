@@ -8,7 +8,7 @@ using System.Net.Http.Headers;
 using System.Web.UI.WebControls;
 using SiteServer.Plugin;
 using SS.Poll.Core;
-using SS.Poll.Model;
+using SS.Poll.Models;
 using SS.Poll.Pages;
 using SS.Poll.Parse;
 using SS.Poll.Provider;

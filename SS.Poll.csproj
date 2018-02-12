@@ -53,13 +53,23 @@
     <Compile Include="Core\FieldManager.cs" />
     <Compile Include="Core\FieldTypeParser.cs" />
     <Compile Include="Core\FieldTypeUtils.cs" />
+    <Compile Include="Core\LayerUtils.cs" />
     <Compile Include="Core\Utils.cs" />
     <Compile Include="Core\ValidateTypeUtils.cs" />
-    <Compile Include="Model\ExtendedAttributes.cs" />
-    <Compile Include="Model\FieldSettings.cs" />
-    <Compile Include="Model\FieldInfo.cs" />
-    <Compile Include="Model\FieldItemInfo.cs" />
-    <Compile Include="Model\FieldType.cs" />
+    <Compile Include="Models\ExtendedAttributes.cs" />
+    <Compile Include="Models\FieldSettings.cs" />
+    <Compile Include="Models\FieldInfo.cs" />
+    <Compile Include="Models\FieldItemInfo.cs" />
+    <Compile Include="Models\FieldType.cs" />
+    <Compile Include="Pages\PageBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\ModalFieldAdd.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\ModalFieldValidate.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Pages\PageSettings.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -74,9 +84,9 @@
     </Compile>
     <Compile Include="Parse\StlPoll.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Model\PollInfo.cs" />
-    <Compile Include="Model\ItemInfo.cs" />
-    <Compile Include="Model\LogInfo.cs" />
+    <Compile Include="Models\PollInfo.cs" />
+    <Compile Include="Models\ItemInfo.cs" />
+    <Compile Include="Models\LogInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provider\Dao.cs" />
     <Compile Include="Provider\FieldDao.cs" />
@@ -94,26 +104,11 @@
     <None Include="assets\plugin-utils\fonts\ionicons.eot" />
     <None Include="assets\plugin-utils\fonts\ionicons.ttf" />
     <None Include="assets\plugin-utils\fonts\ionicons.woff" />
-    <None Include="build\asset-manifest.json" />
-    <None Include="build\manifest.json" />
-    <None Include="build\static\css\main.647e1953.css.map" />
-    <None Include="build\static\js\main.ff0d5bca.js.map" />
-    <None Include="build\static\media\fontawesome-webfont.674f50d2.eot" />
-    <None Include="build\static\media\fontawesome-webfont.af7ae505.woff2" />
-    <None Include="build\static\media\fontawesome-webfont.b06871f2.ttf" />
-    <None Include="build\static\media\fontawesome-webfont.fee66e71.woff" />
-    <None Include="build\static\media\glyphicons-halflings-regular.448c34a5.woff2" />
-    <None Include="build\static\media\glyphicons-halflings-regular.e18bbf61.ttf" />
-    <None Include="build\static\media\glyphicons-halflings-regular.f4769f9b.eot" />
-    <None Include="build\static\media\glyphicons-halflings-regular.fa277232.woff" />
-    <None Include="build\static\media\ionicons.05acfdb5.woff" />
-    <None Include="build\static\media\ionicons.24712f6c.ttf" />
-    <None Include="build\static\media\ionicons.2c2ae068.eot" />
     <None Include="packages.config" />
-    <None Include="plugin.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="README.md" />
+    <None Include="SS.Poll.nuspec" />
+    <None Include="tsconfig.json" />
+    <None Include="tslint.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\datePicker\calendar.js" />
@@ -140,18 +135,12 @@
     <Content Include="assets\plugin-utils\js\bootstrap.min.js" />
     <Content Include="assets\plugin-utils\js\jquery.min.js" />
     <Content Include="assets\plugin-utils\js\plugin-utils.js" />
-    <Content Include="build\index.html" />
-    <Content Include="build\logo.svg" />
-    <Content Include="build\service-worker.js" />
-    <Content Include="build\static\css\main.647e1953.css" />
-    <Content Include="build\static\js\main.ff0d5bca.js" />
-    <Content Include="build\static\media\fontawesome-webfont.acf3dcb7.svg" />
-    <Content Include="build\static\media\glyphicons-halflings-regular.89889688.svg" />
-    <Content Include="build\static\media\ionicons.c037dbbc.svg" />
     <Content Include="css\base.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="js\" />
+    <Content Include="logo.png" />
+    <Content Include="pageFields.aspx" />
+    <Content Include="pageLogs.aspx" />
+    <Content Include="pageResults.aspx" />
+    <Content Include="pageSettings.aspx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

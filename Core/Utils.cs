@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using SS.Poll.Model;
+using SS.Poll.Models;
 
 namespace SS.Poll.Core
 {

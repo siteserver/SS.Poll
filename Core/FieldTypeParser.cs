@@ -5,7 +5,7 @@ using System.Text;
 using System.Web;
 using System.Web.UI.WebControls;
 using SiteServer.Plugin;
-using SS.Poll.Model;
+using SS.Poll.Models;
 
 namespace SS.Poll.Core
 {
