@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/siteserver.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/siteserver.min.css" rel="stylesheet" type="text/css" />
   </head>
 
   <body>
@@ -110,10 +110,8 @@
           <div class="m-b-25"></div>
 
           <asp:Button class="btn btn-primary" id="BtnAddField" Text="新增字段" runat="server" />
-          <asp:Button class="btn" id="BtnAddFields" Text="批量新增字段" runat="server" />
           <asp:Button class="btn" id="BtnImport" Text="导 入" runat="server" />
           <asp:Button class="btn" id="BtnExport" Text="导 出" runat="server" />
-          <asp:Button class="btn" id="BtnReturn" Text="返 回" runat="server" />
 
         </div>
 

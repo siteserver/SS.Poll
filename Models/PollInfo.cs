@@ -5,7 +5,7 @@ namespace SS.Poll.Models
     public class PollInfo
     {
         public int Id { get; set; }
-        public int PublishmentSystemId { get; set; }
+        public int SiteId { get; set; }
         public int ChannelId { get; set; }
         public int ContentId { get; set; }
         public bool IsImage { get; set; }

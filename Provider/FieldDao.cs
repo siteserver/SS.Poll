@@ -19,7 +19,7 @@ namespace SS.Poll.Provider
             },
             new TableColumn
             {
-                AttributeName = nameof(FieldInfo.PublishmentSystemId),
+                AttributeName = nameof(FieldInfo.SiteId),
                 DataType = DataType.Integer
             },
             new TableColumn
@@ -88,7 +88,7 @@ namespace SS.Poll.Provider
         }
 
         private const string ParmId = "@Id";
-        private const string ParmPublishmentSystemId = "@PublishmentSystemId";
+        private const string ParmSiteId = "@SiteId";
         private const string ParmChannelId = "@ChannelId";
         private const string ParmContentId = "@ContentId";
         private const string ParmTaxis = "@Taxis";
@@ -102,11 +102,11 @@ namespace SS.Poll.Provider
 
         public int Insert(FieldInfo fieldInfo)
         {
-            fieldInfo.Taxis = GetMaxTaxis(fieldInfo.PublishmentSystemId, fieldInfo.ChannelId, fieldInfo.ContentId) + 1;
+            fieldInfo.Taxis = GetMaxTaxis(fieldInfo.SiteId, fieldInfo.ChannelId, fieldInfo.ContentId) + 1;
 
             string sqlString = $@"INSERT INTO {TableName}
 (
-    {nameof(FieldInfo.PublishmentSystemId)}, 
+    {nameof(FieldInfo.SiteId)}, 
     {nameof(FieldInfo.ChannelId)}, 
     {nameof(FieldInfo.ContentId)}, 
     {nameof(FieldInfo.Taxis)},
@@ -118,7 +118,7 @@ namespace SS.Poll.Provider
     {nameof(FieldInfo.FieldType)},
     {nameof(FieldInfo.FieldSettings)}
 ) VALUES (
-    @{nameof(FieldInfo.PublishmentSystemId)}, 
+    @{nameof(FieldInfo.SiteId)}, 
     @{nameof(FieldInfo.ChannelId)}, 
     @{nameof(FieldInfo.ContentId)}, 
     @{nameof(FieldInfo.Taxis)},
@@ -133,7 +133,7 @@ namespace SS.Poll.Provider
 
             var parameters = new []
 			{
-				_helper.GetParameter(ParmPublishmentSystemId, fieldInfo.PublishmentSystemId),
+				_helper.GetParameter(ParmSiteId, fieldInfo.SiteId),
                 _helper.GetParameter(ParmChannelId, fieldInfo.ChannelId),
                 _helper.GetParameter(ParmContentId, fieldInfo.ContentId),
                 _helper.GetParameter(ParmTaxis, fieldInfo.Taxis),
@@ -152,10 +152,10 @@ namespace SS.Poll.Provider
         public void Update(FieldInfo info)
         {
             string sqlString = $@"UPDATE {TableName} SET
-                {nameof(FieldInfo.PublishmentSystemId)} = @{nameof(FieldInfo.PublishmentSystemId)}, 
+                {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)}, 
                 {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)}, 
                 {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)}, 
-                {nameof(FieldInfo.Taxis)} = @{nameof(FieldInfo.Taxis)}, 
+                {nameof(FieldInfo.Taxis)} = @{nameof(FieldInfo.Taxis)},
                 {nameof(FieldInfo.AttributeName)} = @{nameof(FieldInfo.AttributeName)},
                 {nameof(FieldInfo.AttributeValue)} = @{nameof(FieldInfo.AttributeValue)},
                 {nameof(FieldInfo.DisplayName)} = @{nameof(FieldInfo.DisplayName)},
@@ -167,7 +167,7 @@ namespace SS.Poll.Provider
 
             var updateParms = new []
 			{
-				_helper.GetParameter(ParmPublishmentSystemId, info.PublishmentSystemId),
+				_helper.GetParameter(ParmSiteId, info.SiteId),
                 _helper.GetParameter(ParmChannelId, info.ChannelId),
                 _helper.GetParameter(ParmContentId, info.ContentId),
                 _helper.GetParameter(ParmTaxis, info.Taxis),
@@ -205,7 +205,7 @@ namespace SS.Poll.Provider
             string sqlString =
                 $@"SELECT
     {nameof(FieldInfo.Id)}, 
-    {nameof(FieldInfo.PublishmentSystemId)}, 
+    {nameof(FieldInfo.SiteId)}, 
     {nameof(FieldInfo.ChannelId)}, 
     {nameof(FieldInfo.ContentId)}, 
     {nameof(FieldInfo.Taxis)},
@@ -218,14 +218,14 @@ namespace SS.Poll.Provider
     {nameof(FieldInfo.FieldSettings)}
 FROM {TableName} 
 WHERE
-    {nameof(FieldInfo.PublishmentSystemId)} = @{nameof(FieldInfo.PublishmentSystemId)} AND 
+    {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND 
     {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND 
     {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)}
 ORDER BY {nameof(FieldInfo.Taxis)}";
 
             var parameters = new[]
             {
-                _helper.GetParameter(ParmPublishmentSystemId, siteId),
+                _helper.GetParameter(ParmSiteId, siteId),
                 _helper.GetParameter(ParmChannelId, channelId),
                 _helper.GetParameter(ParmContentId, contentId)
             };
@@ -262,14 +262,14 @@ ORDER BY {nameof(FieldInfo.Taxis)}";
             var exists = false;
 
             string sqlString = $@"SELECT Id FROM {TableName} WHERE 
-    {nameof(FieldInfo.PublishmentSystemId)} = @{nameof(FieldInfo.PublishmentSystemId)} AND 
+    {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND 
     {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND 
     {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND 
     {nameof(FieldInfo.AttributeName)} = @{nameof(FieldInfo.AttributeName)}";
 
             var parms = new []
 			{
-                _helper.GetParameter(ParmPublishmentSystemId, siteId),
+                _helper.GetParameter(ParmSiteId, siteId),
                 _helper.GetParameter(ParmChannelId, channelId),
                 _helper.GetParameter(ParmContentId, contentId),
                 _helper.GetParameter(ParmAttributeName, attributeName)
@@ -290,13 +290,13 @@ ORDER BY {nameof(FieldInfo.Taxis)}";
         public int GetCount(int siteId, int channelId, int contentId)
         {
             string sqlString = $@"SELECT COUNT(*) FROM {TableName} WHERE 
-    {nameof(FieldInfo.PublishmentSystemId)} = @{nameof(FieldInfo.PublishmentSystemId)} AND 
+    {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND 
     {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND 
     {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)}";
 
             var parms = new[]
             {
-                _helper.GetParameter(ParmPublishmentSystemId, siteId),
+                _helper.GetParameter(ParmSiteId, siteId),
                 _helper.GetParameter(ParmChannelId, channelId),
                 _helper.GetParameter(ParmContentId, contentId)
             };
@@ -311,7 +311,7 @@ ORDER BY {nameof(FieldInfo.Taxis)}";
             string sqlString =
                 $@"SELECT
     {nameof(FieldInfo.Id)}, 
-    {nameof(FieldInfo.PublishmentSystemId)}, 
+    {nameof(FieldInfo.SiteId)}, 
     {nameof(FieldInfo.ChannelId)}, 
     {nameof(FieldInfo.ContentId)}, 
     {nameof(FieldInfo.Taxis)},
@@ -354,7 +354,7 @@ WHERE {nameof(FieldInfo.Id)} = @{nameof(FieldInfo.Id)}";
             string sqlString =
                 $@"SELECT
     {nameof(FieldInfo.Id)}, 
-    {nameof(FieldInfo.PublishmentSystemId)}, 
+    {nameof(FieldInfo.SiteId)}, 
     {nameof(FieldInfo.ChannelId)}, 
     {nameof(FieldInfo.ContentId)}, 
     {nameof(FieldInfo.Taxis)},
@@ -367,14 +367,14 @@ WHERE {nameof(FieldInfo.Id)} = @{nameof(FieldInfo.Id)}";
     {nameof(FieldInfo.FieldSettings)}
 FROM {TableName} 
 WHERE 
-    {nameof(FieldInfo.PublishmentSystemId)} = @{nameof(FieldInfo.PublishmentSystemId)} AND 
+    {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND 
     {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND 
     {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND 
     {nameof(FieldInfo.AttributeName)} = @{nameof(FieldInfo.AttributeName)}";
 
             var parms = new []
 			{
-                _helper.GetParameter(ParmPublishmentSystemId, siteId),
+                _helper.GetParameter(ParmSiteId, siteId),
                 _helper.GetParameter(ParmChannelId, channelId),
                 _helper.GetParameter(ParmContentId, contentId),
                 _helper.GetParameter(ParmAttributeName, attributeName)
@@ -395,7 +395,7 @@ WHERE
         private int GetMaxTaxis(int siteId, int channelId, int contentId)
         {
             string sqlString =
-                $"SELECT MAX(Taxis) AS MaxTaxis FROM {TableName} WHERE {nameof(FieldInfo.PublishmentSystemId)} = {siteId} AND {nameof(FieldInfo.ChannelId)} = {channelId} AND {nameof(FieldInfo.ContentId)} = {contentId}";
+                $"SELECT MAX(Taxis) AS MaxTaxis FROM {TableName} WHERE {nameof(FieldInfo.SiteId)} = {siteId} AND {nameof(FieldInfo.ChannelId)} = {channelId} AND {nameof(FieldInfo.ContentId)} = {contentId}";
             var maxTaxis = 0;
 
             using (var rdr = _helper.ExecuteReader(_connectionString, sqlString))
@@ -414,14 +414,14 @@ WHERE
             var fieldInfo = GetFieldInfo(id, false);
             if (fieldInfo == null) return;
 
-            var sqlString = _helper.ToTopSqlString(TableName, "Id, Taxis", $"WHERE {nameof(FieldInfo.PublishmentSystemId)} = @{nameof(FieldInfo.PublishmentSystemId)} AND {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND Taxis > (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis", 1);
+            var sqlString = _helper.ToTopSqlString(TableName, "Id, Taxis", $"WHERE {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND Taxis > (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis", 1);
 
             var higherId = 0;
             var higherTaxis = 0;
 
             var parms = new []
             {
-                _helper.GetParameter(ParmPublishmentSystemId, fieldInfo.PublishmentSystemId),
+                _helper.GetParameter(ParmSiteId, fieldInfo.SiteId),
                 _helper.GetParameter(ParmChannelId, fieldInfo.ChannelId),
                 _helper.GetParameter(ParmContentId, fieldInfo.ContentId),
                 _helper.GetParameter(ParmId, id)
@@ -449,13 +449,13 @@ WHERE
             var fieldInfo = GetFieldInfo(id, false);
             if (fieldInfo == null) return;
 
-            var sqlString = _helper.ToTopSqlString(TableName, "Id, Taxis", $"WHERE {nameof(FieldInfo.PublishmentSystemId)} = @{nameof(FieldInfo.PublishmentSystemId)} AND {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND Taxis < (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis DESC", 1);
+            var sqlString = _helper.ToTopSqlString(TableName, "Id, Taxis", $"WHERE {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND Taxis < (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis DESC", 1);
             var lowerId = 0;
             var lowerTaxis = 0;
 
             var parms = new []
             {
-                _helper.GetParameter(ParmPublishmentSystemId, fieldInfo.PublishmentSystemId),
+                _helper.GetParameter(ParmSiteId, fieldInfo.SiteId),
                 _helper.GetParameter(ParmChannelId, fieldInfo.ChannelId),
                 _helper.GetParameter(ParmContentId, fieldInfo.ContentId),
                 _helper.GetParameter(ParmId, id)
@@ -500,7 +500,7 @@ WHERE
             var i = 0;
             fieldInfo.Id = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
             i++;
-            fieldInfo.PublishmentSystemId = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
+            fieldInfo.SiteId = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
             i++;
             fieldInfo.ChannelId = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
             i++;

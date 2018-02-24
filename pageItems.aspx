@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" Inherits="SS.Poll.Pages.PageLogs" %>
+﻿<%@ Page Language="C#" Inherits="SS.Poll.Pages.PageItems" %>
   <!DOCTYPE html>
   <html>
 
@@ -20,7 +20,7 @@
               <!-- Navigation Menu-->
               <ul class="navigation-menu">
 
-                <li class="has-submenu">
+                <li class="has-submenu active">
                   <a href="<%=PageItemsUrl%>">投票项管理</a>
                 </li>
 
@@ -39,7 +39,7 @@
                     查看投票结果
                   </a>
                 </li>
-                <li class="has-submenu active">
+                <li class="has-submenu">
                   <a href="<%=PageLogsUrl%>">
                     投票提交记录
                   </a>
@@ -60,39 +60,45 @@
       </header>
 
       <div class="container-fluid">
+
         <div class="card-box m-t-20">
-          <h4 class="text-dark  header-title m-t-0">投票提交记录</h4>
+          <div class="header-title">投票项管理</div>
           <p class="text-muted m-b-25 font-13"></p>
+
           <asp:Literal id="LtlMessage" runat="server" />
 
-          <table class="tablesaw m-t-20 table m-b-0 tablesaw-stack">
-            <thead>
-              <tr>
-                <asp:Literal id="LtlFieldNames" runat="server" />
-                <th scope="col">提交时间</th>
-              </tr>
-            </thead>
-            <tbody>
-              <asp:repeater id="RptLogs" runat="server">
-                <itemtemplate>
-                  <tr>
-                    <asp:Literal id="ltlValues" runat="server" />
-                    <td>
-                      <asp:Literal id="ltlAddDate" runat="server" />
-                    </td>
-                  </tr>
-                </itemtemplate>
-              </asp:repeater>
-            </tbody>
-          </table>
+          <asp:dataGrid id="DgContents" showHeader="true" AutoGenerateColumns="false" HeaderStyle-CssClass="info thead" CssClass="table m-0"
+            gridlines="none" runat="server">
+            <Columns>
+              <asp:TemplateColumn HeaderText="标题">
+                <ItemTemplate>
+                  <asp:Literal ID="ltlTitle" runat="server"></asp:Literal>
+                </ItemTemplate>
+              </asp:TemplateColumn>
+              <asp:TemplateColumn HeaderText="副标题">
+                <ItemTemplate>
+                  <asp:Literal ID="ltlSubTitle" runat="server"></asp:Literal>
+                </ItemTemplate>
+              </asp:TemplateColumn>
+              <asp:TemplateColumn HeaderText="操作">
+                <ItemTemplate>
+                  <asp:Literal ID="ltlActions" runat="server"></asp:Literal>
+                </ItemTemplate>
+                <ItemStyle Width="300" />
+              </asp:TemplateColumn>
+            </Columns>
+          </asp:dataGrid>
 
           <div class="m-b-25"></div>
 
-          <asp:Button class="btn btn-success" id="BtnExport" onclick="BtnExport_Click" Text="导 出" runat="server" />
+          <asp:Button class="btn btn-primary" id="BtnAddItem" Text="新增投票项" runat="server" />
+          <asp:Button class="btn" id="BtnImport" Text="导 入" runat="server" />
+          <asp:Button class="btn" id="BtnExport" Text="导 出" runat="server" />
+
         </div>
+
       </div>
 
-      <asp:Literal id="LtlScript" runat="server"></asp:Literal>
     </form>
   </body>
 

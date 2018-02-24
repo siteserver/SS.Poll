@@ -14,13 +14,11 @@ namespace SS.Poll.Pages
 
         public PollInfo PollInfo { get; private set; }
 
-        public string PageItemsUrl => Main.Instance.PluginApi.GetPluginUrl($"build/index.html?pageType=edit_items&siteId={SiteId}&channelId={ChannelId}&contentId={ContentId}&returnUrl={HttpUtility.UrlEncode(ReturnUrl)}");
+        public string PageItemsUrl => PageItems.GetRedirectUrl(SiteId, ChannelId, ContentId, ReturnUrl);
 
-        public string PageSettingsUrl
-            => PageSettings.GetRedirectUrl(SiteId, ChannelId, ContentId, ReturnUrl);
+        public string PageFieldsUrl => PageFields.GetRedirectUrl(SiteId, ChannelId, ContentId, ReturnUrl);
 
-        public string PageFieldsUrl
-            => PageFields.GetRedirectUrl(SiteId, ChannelId, ContentId, ReturnUrl);
+        public string PageSettingsUrl => PageSettings.GetRedirectUrl(SiteId, ChannelId, ContentId, ReturnUrl);
 
         public string PageResultsUrl => PageResults.GetRedirectUrl(SiteId, ChannelId, ContentId, ReturnUrl);
 
@@ -46,7 +44,7 @@ namespace SS.Poll.Pages
 
             PollInfo = new PollInfo
             {
-                PublishmentSystemId = SiteId,
+                SiteId = SiteId,
                 ChannelId = ChannelId,
                 ContentId = ContentId,
                 IsImage = true,

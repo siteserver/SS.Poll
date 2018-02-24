@@ -6,7 +6,7 @@
     <head>
       <meta charset="utf-8">
       <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-      <link href="assets/css/siteserver.css" rel="stylesheet" type="text/css" />
+      <link href="assets/css/siteserver.min.css" rel="stylesheet" type="text/css" />
     </head>
 
     <body>
@@ -70,8 +70,8 @@
             <asp:Literal id="LtlMessage" runat="server" />
 
             <div class="form-group">
-              <label class="col-md-2 control-label">投票选项</label>
-              <div class="col-md-10">
+              <label class="col-2 control-label">投票选项</label>
+              <div class="col-10">
                 <div class="checkbox checkbox-primary">
                   <asp:CheckBox ID="CbIsImage" text="包含图片" runat="server"></asp:CheckBox>
                   <asp:CheckBox ID="CbIsUrl" style="margin-left: 30px;" text="包含链接" runat="server"></asp:CheckBox>
@@ -85,47 +85,46 @@
             <asp:PlaceHolder id="PhTimeout" runat="server">
 
               <div class="form-group">
-                <label class="col-md-2 control-label" for="maxNum">开始时间</label>
-                <div class="col-md-3">
+                <label class="col-2 control-label" for="maxNum">开始时间</label>
+                <div class="col-3">
                   <ctrl:DateTimeTextBox ID="TbTimeToStart" class="form-control" Columns="40" runat="server"></ctrl:DateTimeTextBox>
                   <asp:RequiredFieldValidator ControlToValidate="TbTimeToStart" errorMessage=" *" foreColor="red" display="Dynamic" runat="server"
                   />
                 </div>
-                <span class="col-md-7">&nbsp;</span>
+                <span class="col-7">&nbsp;</span>
               </div>
               <div class="form-group">
-                <label class="col-md-2 control-label" for="maxNum">结束时间</label>
-                <div class="col-md-3">
+                <label class="col-2 control-label" for="maxNum">结束时间</label>
+                <div class="col-3">
                   <ctrl:DateTimeTextBox ID="TbTimeToEnd" class="form-control" Columns="40" runat="server"></ctrl:DateTimeTextBox>
                   <asp:RequiredFieldValidator ControlToValidate="TbTimeToEnd" errorMessage=" *" foreColor="red" display="Dynamic" runat="server"
                   />
                 </div>
-                <span class="col-md-7">&nbsp;</span>
+                <span class="col-7">&nbsp;</span>
               </div>
 
             </asp:PlaceHolder>
             <asp:PlaceHolder id="PhCheckbox" runat="server">
 
-              <div class="form-group">
-                <label class="col-md-2 control-label" for="maxNum">最少选择</label>
-                <div class="col-md-1">
-                  <asp:TextBox ID="TbCheckboxMin" class="form-control" Columns="40" runat="server"></asp:TextBox>
+              <div class="form-inline form-group">
+                <label class="mr-sm-2 ml-sm-2" for="maxNum">
+                  最少选择
                   <asp:RequiredFieldValidator ControlToValidate="TbCheckboxMin" errorMessage=" *" foreColor="red" display="Dynamic" runat="server"
                   />
-                </div>
-                <label class="col-md-1 control-label" for="checkboxMax">最多选择</label>
-                <div class="col-md-1">
-                  <asp:TextBox ID="TbCheckboxMax" class="form-control" Columns="40" runat="server"></asp:TextBox>
+                </label>
+                <asp:TextBox ID="TbCheckboxMin" class="form-control" runat="server"></asp:TextBox>
+                <label class="mr-sm-2 ml-sm-2" for="checkboxMax">
+                  最多选择
                   <asp:RequiredFieldValidator ControlToValidate="TbCheckboxMax" errorMessage=" *" foreColor="red" display="Dynamic" runat="server"
                   />
-                </div>
-                <span class="col-md-4">&nbsp;</span>
+                </label>
+                <asp:TextBox ID="TbCheckboxMax" class="form-control" runat="server"></asp:TextBox>
               </div>
 
             </asp:PlaceHolder>
             <div class="form-group">
-              <label class="col-md-2 control-label">投票界面选项</label>
-              <div class="col-md-10">
+              <label class="col-2 control-label">投票界面选项</label>
+              <div class="col-10">
                 <div class="checkbox checkbox-primary">
                   <asp:CheckBox ID="CbIsProfile" text="需要提交投票者信息" runat="server"></asp:CheckBox>
                   <asp:CheckBox ID="CbIsResult" style="margin-left: 30px;" text="投票结束后显示结果" runat="server"></asp:CheckBox>
@@ -135,7 +134,7 @@
             <div class="m-b-25"></div>
             <div class="form-group m-b-0">
               <div class="col-sm-offset-2 col-sm-10">
-                <asp:Button class="btn btn-success" onclick="BtnSubmit_Click" Text="保 存" runat="server" />
+                <asp:Button class="btn btn-primary" onclick="BtnSubmit_Click" Text="保 存" runat="server" />
               </div>
             </div>
 

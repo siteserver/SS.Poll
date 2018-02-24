@@ -36,8 +36,8 @@ namespace SS.Poll.Pages
                 LtlFieldNames.Text += $@"<th scope=""col"">{fieldInfo.DisplayName}</th>";
             }
 
-            var totalCount = Main.LogDao.GetCount(PollInfo.Id);
-            var logs = Main.LogDao.GetPollLogInfoList(PollInfo.Id, totalCount, 30, 0);
+            var totalCount = Main.LogDao.GetCount(SiteId, ChannelId, ContentId);
+            var logs = Main.LogDao.GetPollLogInfoList(SiteId, ChannelId, ContentId, totalCount, 30, 0);
 
             RptLogs.DataSource = logs;
             RptLogs.ItemDataBound += RptLogs_ItemDataBound;
@@ -46,7 +46,7 @@ namespace SS.Poll.Pages
 
         public void BtnExport_Click(object sender, EventArgs e)
         {
-            var logs = Main.LogDao.GetAllPollLogInfoList(PollInfo.Id);
+            var logs = Main.LogDao.GetAllPollLogInfoList(SiteId, ChannelId, ContentId);
 
             var head = new List<string> { "序号"};
             foreach (var fieldInfo in _fieldInfoList)

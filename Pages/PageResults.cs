@@ -28,7 +28,7 @@ namespace SS.Poll.Pages
         {
             if (IsPostBack) return;
 
-            var items = Main.ItemDao.GetItemInfoList(PollInfo.Id, out _totalCount);
+            var items = Main.ItemDao.GetItemInfoList(PollInfo.SiteId, PollInfo.ChannelId, PollInfo.ContentId, out _totalCount);
 
             RptItems.DataSource = items;
             RptItems.ItemDataBound += RptItems_ItemDataBound;
@@ -38,7 +38,7 @@ namespace SS.Poll.Pages
         public void BtnExport_Click(object sender, EventArgs e)
         {
             int totalCount;
-            var itemInfoList = Main.ItemDao.GetItemInfoList(PollInfo.Id, out totalCount);
+            var itemInfoList = Main.ItemDao.GetItemInfoList(PollInfo.SiteId, PollInfo.ChannelId, PollInfo.ContentId, out totalCount);
 
             var head = new List<string> { "序号", "标题", "票数", "占比" };
 

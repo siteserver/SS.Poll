@@ -63,13 +63,7 @@
     - Release
 
   environment:
-    nodejs_version: "6"
     TreatWarningsAsErrors: false
-    PUBLIC_URL: "./"
-
-  install:
-    - ps: Install-Product node $env:nodejs_version
-    - npm install
 
   skip_tags: true
 
@@ -78,7 +72,6 @@
 
   before_build:
     - nuget restore SS.Poll.sln
-    - npm run build
 
   build:
     project: SS.Poll.sln       # path to Visual Studio solution or project

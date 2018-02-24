@@ -4,6 +4,9 @@ using System.Drawing;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using SS.Poll.Models;
 
 namespace SS.Poll.Core
@@ -17,6 +20,16 @@ namespace SS.Poll.Core
             if (a == b) return true;
             if (string.IsNullOrEmpty(a) || string.IsNullOrEmpty(b)) return false;
             return string.Equals(a.Trim().ToLower(), b.Trim().ToLower());
+        }
+
+        public static int ToInt(string intStr)
+        {
+            int i;
+            if (int.TryParse(intStr, out i))
+            {
+                return i;
+            }
+            return 0;
         }
 
         public static DateTime ToDateTime(string dateTimeStr)
@@ -166,6 +179,25 @@ namespace SS.Poll.Core
                 }
             }
             return list;
+        }
+
+        public static string JsonSerialize(object obj)
+        {
+            try
+            {
+                var settings = new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+                var timeFormat = new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd HH:mm:ss" };
+                settings.Converters.Add(timeFormat);
+
+                return JsonConvert.SerializeObject(obj, settings);
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
     }
 }

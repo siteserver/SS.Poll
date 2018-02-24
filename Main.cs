@@ -40,13 +40,8 @@ namespace SS.Poll
             service
                 .AddContentLink(new HyperLink
                 {
-                    Text = "编辑投票",
-                    NavigateUrl = "build/index.html"
-                })
-                .AddContentLink(new HyperLink
-                {
-                    Text = "查看投票",
-                    NavigateUrl = $"{nameof(PageResults)}.aspx"
+                    Text = "投票管理",
+                    NavigateUrl = $"{nameof(PageItems)}.aspx"
                 })
                 .AddDatabaseTable(PollDao.TableName, PollDao.Columns)
                 .AddDatabaseTable(ItemDao.TableName, ItemDao.Columns)
@@ -61,7 +56,7 @@ namespace SS.Poll
                 var pollInfo = PollDao.GetPollInfo(args.SiteId, args.ChannelId, args.ContentId);
                 if (pollInfo == null) return;
 
-                pollInfo.PublishmentSystemId = args.TargetSiteId;
+                pollInfo.SiteId = args.TargetSiteId;
                 pollInfo.ChannelId = args.TargetChannelId;
                 pollInfo.ContentId = args.TargetContentId;
                 pollInfo.TimeToStart = DateTime.Now;
@@ -123,22 +118,22 @@ namespace SS.Poll
 
                         return response;
                     }
-                    if (action == "logs")
-                    {
-                        var limit = request.GetQueryInt("limit");
-                        var offset = request.GetQueryInt("offset");
+                    //if (action == "logs")
+                    //{
+                    //    var limit = request.GetQueryInt("limit");
+                    //    var offset = request.GetQueryInt("offset");
 
-                        var pollId = Convert.ToInt32(id);
+                    //    var pollId = Convert.ToInt32(id);
 
-                        var totalCount = LogDao.GetCount(pollId);
-                        var logs = LogDao.GetPollLogInfoList(pollId, totalCount, limit, offset);
+                    //    var totalCount = LogDao.GetCount(SiteId);
+                    //    var logs = LogDao.GetPollLogInfoList(pollId, totalCount, limit, offset);
 
-                        return new
-                        {
-                            Logs = logs,
-                            TotalCount = totalCount
-                        };
-                    }
+                    //    return new
+                    //    {
+                    //        Logs = logs,
+                    //        TotalCount = totalCount
+                    //    };
+                    //}
                 }
                 if (string.IsNullOrEmpty(action) && string.IsNullOrEmpty(id))
                 {
@@ -151,7 +146,7 @@ namespace SS.Poll
                     {
                         pollInfo = new PollInfo
                         {
-                            PublishmentSystemId = siteId,
+                            SiteId = siteId,
                             ChannelId = channelId,
                             ContentId = contentId,
                             IsImage = true,
@@ -162,7 +157,7 @@ namespace SS.Poll
                         pollInfo.Id = PollDao.Insert(pollInfo);
                     }
                     int totalCount;
-                    var itemInfoList = ItemDao.GetItemInfoList(pollInfo.Id, out totalCount);
+                    var itemInfoList = ItemDao.GetItemInfoList(pollInfo.SiteId, pollInfo.ChannelId, pollInfo.ContentId, out totalCount);
 
                     return new
                     {
@@ -170,21 +165,6 @@ namespace SS.Poll
                         Items = itemInfoList,
                         TotalCount = totalCount
                     };
-                }
-
-                throw new Exception("请求的资源不在服务器上");
-            };
-
-            service.ApiDelete += (sender, args) =>
-            {
-                var action = args.Action;
-                var id = args.Id;
-
-                if (!string.IsNullOrEmpty(action) && !string.IsNullOrEmpty(args.Id) && action == "item")
-                {
-                    var itemId = Convert.ToInt32(id);
-                    ItemDao.Delete(itemId);
-                    return new {};
                 }
 
                 throw new Exception("请求的资源不在服务器上");
@@ -211,7 +191,9 @@ namespace SS.Poll
                     {
                         var itemInfo = new ItemInfo
                         {
-                            PollId = request.GetPostInt("pollId"),
+                            SiteId = siteId,
+                            ChannelId = request.GetPostInt("channelId"),
+                            ContentId = request.GetPostInt("contentId"),
                             Title = request.GetPostString("title"),
                             SubTitle = request.GetPostString("subTitle"),
                             ImageUrl = request.GetPostString("imageUrl"),
@@ -223,95 +205,95 @@ namespace SS.Poll
 
                         return itemInfo;
                     }
-                    if (action.ToLower() == "image")
-                    {
-                        var errorMessage = string.Empty;
-                        var imageUrl = string.Empty;
-
-                        try
-                        {
-                            if (request.HttpRequest.Files.Count > 0)
-                            {
-                                var postedFile = request.HttpRequest.Files[0];
-                                var filePath = postedFile.FileName;
-                                var fileExtName = Path.GetExtension(filePath).ToLower();
-                                var localFilePath = FilesApi.GetUploadFilePath(siteId, filePath);
-
-                                if (fileExtName != ".jpg" && fileExtName != ".png")
-                                {
-                                    errorMessage = "上传图片格式不正确！";
-                                }
-                                else
-                                {
-                                    postedFile.SaveAs(localFilePath);
-                                    imageUrl = FilesApi.GetSiteUrlByFilePath(localFilePath);
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            errorMessage = ex.Message;
-                        }
-
-                        if (!string.IsNullOrEmpty(errorMessage))
-                        {
-                            throw new Exception(errorMessage);
-                        }
-
-                        return imageUrl;
-                    }
-                }
-
-                throw new Exception("请求的资源不在服务器上");
-            };
-
-            service.ApiPut += (sender, args) =>
-            {
-                var request = args.Request;
-                var action = args.Action;
-                var id = args.Id;
-
-                if (!string.IsNullOrEmpty(action) && !string.IsNullOrEmpty(id))
-                {
-                    var pollId = Convert.ToInt32(id);
-
-                    //if (name.ToLower() == "poll")
+                    //if (action.ToLower() == "image")
                     //{
-                    //    var pollInfo = Main.PollDao.GetPollInfo(pollId);
+                    //    var errorMessage = string.Empty;
+                    //    var imageUrl = string.Empty;
 
-                    //    pollInfo.IsImage = context.GetPostBool("isImage");
-                    //    pollInfo.IsUrl = context.GetPostBool("isUrl");
-                    //    pollInfo.IsTimeout = context.GetPostBool("isTimeout");
-                    //    pollInfo.IsCheckbox = context.GetPostBool("isCheckbox");
-                    //    pollInfo.TimeToStart = Convert.ToDateTime(context.GetPostString("timeToStart"));
-                    //    pollInfo.TimeToEnd = Convert.ToDateTime(context.GetPostString("timeToEnd"));
-                    //    pollInfo.CheckboxMin = context.GetPostInt("checkboxMin");
-                    //    pollInfo.CheckboxMax = context.GetPostInt("checkboxMax");
-                    //    pollInfo.IsProfile = context.GetPostBool("isProfile");
-                    //    pollInfo.IsResult = context.GetPostBool("isResult");
+                    //    try
+                    //    {
+                    //        if (request.HttpRequest.Files.Count > 0)
+                    //        {
+                    //            var postedFile = request.HttpRequest.Files[0];
+                    //            var filePath = postedFile.FileName;
+                    //            var fileExtName = Path.GetExtension(filePath).ToLower();
+                    //            var localFilePath = FilesApi.GetUploadFilePath(siteId, filePath);
 
-                    //    Main.PollDao.Update(pollInfo);
+                    //            if (fileExtName != ".jpg" && fileExtName != ".png")
+                    //            {
+                    //                errorMessage = "上传图片格式不正确！";
+                    //            }
+                    //            else
+                    //            {
+                    //                postedFile.SaveAs(localFilePath);
+                    //                imageUrl = FilesApi.GetSiteUrlByFilePath(localFilePath);
+                    //            }
+                    //        }
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        errorMessage = ex.Message;
+                    //    }
 
-                    //    return pollInfo;
+                    //    if (!string.IsNullOrEmpty(errorMessage))
+                    //    {
+                    //        throw new Exception(errorMessage);
+                    //    }
+
+                    //    return imageUrl;
                     //}
-                    if (action.ToLower() == "item")
-                    {
-                        var itemInfo = ItemDao.GetItemInfo(pollId);
-
-                        itemInfo.Title = request.GetPostString("title");
-                        itemInfo.SubTitle = request.GetPostString("subTitle");
-                        itemInfo.ImageUrl = request.GetPostString("imageUrl");
-                        itemInfo.LinkUrl = request.GetPostString("linkUrl");
-                        itemInfo.Count = request.GetPostInt("count");
-
-                        ItemDao.Update(itemInfo);
-
-                        return itemInfo;
-                    }
                 }
 
                 throw new Exception("请求的资源不在服务器上");
             };
+
+            //service.ApiPut += (sender, args) =>
+            //{
+            //    var request = args.Request;
+            //    var action = args.Action;
+            //    var id = args.Id;
+
+            //    if (!string.IsNullOrEmpty(action) && !string.IsNullOrEmpty(id))
+            //    {
+            //        var pollId = Convert.ToInt32(id);
+
+            //        //if (name.ToLower() == "poll")
+            //        //{
+            //        //    var pollInfo = Main.PollDao.GetPollInfo(pollId);
+
+            //        //    pollInfo.IsImage = context.GetPostBool("isImage");
+            //        //    pollInfo.IsUrl = context.GetPostBool("isUrl");
+            //        //    pollInfo.IsTimeout = context.GetPostBool("isTimeout");
+            //        //    pollInfo.IsCheckbox = context.GetPostBool("isCheckbox");
+            //        //    pollInfo.TimeToStart = Convert.ToDateTime(context.GetPostString("timeToStart"));
+            //        //    pollInfo.TimeToEnd = Convert.ToDateTime(context.GetPostString("timeToEnd"));
+            //        //    pollInfo.CheckboxMin = context.GetPostInt("checkboxMin");
+            //        //    pollInfo.CheckboxMax = context.GetPostInt("checkboxMax");
+            //        //    pollInfo.IsProfile = context.GetPostBool("isProfile");
+            //        //    pollInfo.IsResult = context.GetPostBool("isResult");
+
+            //        //    Main.PollDao.Update(pollInfo);
+
+            //        //    return pollInfo;
+            //        //}
+            //        if (action.ToLower() == "item")
+            //        {
+            //            var itemInfo = ItemDao.GetItemInfo(pollId);
+
+            //            itemInfo.Title = request.GetPostString("title");
+            //            itemInfo.SubTitle = request.GetPostString("subTitle");
+            //            itemInfo.ImageUrl = request.GetPostString("imageUrl");
+            //            itemInfo.LinkUrl = request.GetPostString("linkUrl");
+            //            itemInfo.Count = request.GetPostInt("count");
+
+            //            ItemDao.Update(itemInfo);
+
+            //            return itemInfo;
+            //        }
+            //    }
+
+            //    throw new Exception("请求的资源不在服务器上");
+            //};
         }
         
     }

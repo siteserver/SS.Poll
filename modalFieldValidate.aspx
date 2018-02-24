@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/siteserver.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/siteserver.min.css" rel="stylesheet" type="text/css" />
   </head>
 
   <body class="bg-light">

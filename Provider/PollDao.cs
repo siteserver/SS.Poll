@@ -19,7 +19,7 @@ namespace SS.Poll.Provider
             },
             new TableColumn
             {
-                AttributeName = nameof(PollInfo.PublishmentSystemId),
+                AttributeName = nameof(PollInfo.SiteId),
                 DataType = DataType.Integer
             },
             new TableColumn
@@ -98,7 +98,7 @@ namespace SS.Poll.Provider
             int pollId;
 
             string sqlString = $@"INSERT INTO {TableName}
-           ({nameof(PollInfo.PublishmentSystemId)}, 
+           ({nameof(PollInfo.SiteId)}, 
             {nameof(PollInfo.ChannelId)}, 
             {nameof(PollInfo.ContentId)}, 
             {nameof(PollInfo.IsImage)}, 
@@ -112,7 +112,7 @@ namespace SS.Poll.Provider
             {nameof(PollInfo.CheckboxMax)}, 
             {nameof(PollInfo.IsProfile)})
      VALUES
-           (@{nameof(PollInfo.PublishmentSystemId)}, 
+           (@{nameof(PollInfo.SiteId)}, 
             @{nameof(PollInfo.ChannelId)}, 
             @{nameof(PollInfo.ContentId)}, 
             @{nameof(PollInfo.IsImage)}, 
@@ -128,7 +128,7 @@ namespace SS.Poll.Provider
 
             var parameters = new List<IDataParameter>
             {
-                _helper.GetParameter(nameof(pollInfo.PublishmentSystemId), pollInfo.PublishmentSystemId),
+                _helper.GetParameter(nameof(pollInfo.SiteId), pollInfo.SiteId),
                 _helper.GetParameter(nameof(pollInfo.ChannelId), pollInfo.ChannelId),
                 _helper.GetParameter(nameof(pollInfo.ContentId), pollInfo.ContentId),
                 _helper.GetParameter(nameof(pollInfo.IsImage), pollInfo.IsImage),
@@ -168,7 +168,7 @@ namespace SS.Poll.Provider
         public void Update(PollInfo pollInfo)
         {
             string sqlString = $@"UPDATE {TableName} SET
-                {nameof(PollInfo.PublishmentSystemId)} = @{nameof(PollInfo.PublishmentSystemId)}, 
+                {nameof(PollInfo.SiteId)} = @{nameof(PollInfo.SiteId)}, 
                 {nameof(PollInfo.ChannelId)} = @{nameof(PollInfo.ChannelId)}, 
                 {nameof(PollInfo.ContentId)} = @{nameof(PollInfo.ContentId)}, 
                 {nameof(PollInfo.IsImage)} = @{nameof(PollInfo.IsImage)}, 
@@ -185,7 +185,7 @@ namespace SS.Poll.Provider
 
             var parameters = new List<IDataParameter>
             {
-                _helper.GetParameter(nameof(pollInfo.PublishmentSystemId), pollInfo.PublishmentSystemId),
+                _helper.GetParameter(nameof(pollInfo.SiteId), pollInfo.SiteId),
                 _helper.GetParameter(nameof(pollInfo.ChannelId), pollInfo.ChannelId),
                 _helper.GetParameter(nameof(pollInfo.ContentId), pollInfo.ContentId),
                 _helper.GetParameter(nameof(pollInfo.IsImage), pollInfo.IsImage),
@@ -211,7 +211,7 @@ namespace SS.Poll.Provider
             //DataProviderWx.PollLogDao.DeleteAll(pollId);
             //DataProviderWx.PollItemDao.DeleteAll(siteId, pollId);
 
-            string sqlString = $"DELETE FROM {TableName} WHERE {nameof(PollInfo.PublishmentSystemId)} = {siteId} AND {nameof(PollInfo.ChannelId)} = {channelId} AND {nameof(PollInfo.ContentId)} = {contentId}";
+            string sqlString = $"DELETE FROM {TableName} WHERE {nameof(PollInfo.SiteId)} = {siteId} AND {nameof(PollInfo.ChannelId)} = {channelId} AND {nameof(PollInfo.ContentId)} = {contentId}";
             _helper.ExecuteNonQuery(_connectionString, sqlString);
         }
 
@@ -235,7 +235,7 @@ namespace SS.Poll.Provider
             PollInfo pollInfo = null;
 
             string sqlString = $@"SELECT {nameof(PollInfo.Id)}, 
-            {nameof(PollInfo.PublishmentSystemId)}, 
+            {nameof(PollInfo.SiteId)}, 
             {nameof(PollInfo.ChannelId)}, 
             {nameof(PollInfo.ContentId)}, 
             {nameof(PollInfo.IsImage)}, 
@@ -248,7 +248,7 @@ namespace SS.Poll.Provider
             {nameof(PollInfo.CheckboxMin)},
             {nameof(PollInfo.CheckboxMax)}, 
             {nameof(PollInfo.IsProfile)}
-            FROM {TableName} WHERE {nameof(PollInfo.PublishmentSystemId)} = {siteId} AND {nameof(PollInfo.ChannelId)} = {channelId} AND {nameof(PollInfo.ContentId)} = {contentId}";
+            FROM {TableName} WHERE {nameof(PollInfo.SiteId)} = {siteId} AND {nameof(PollInfo.ChannelId)} = {channelId} AND {nameof(PollInfo.ContentId)} = {contentId}";
 
             using (var rdr = _helper.ExecuteReader(_connectionString, sqlString))
             {
@@ -267,7 +267,7 @@ namespace SS.Poll.Provider
             PollInfo pollInfo = null;
 
             string sqlString = $@"SELECT {nameof(PollInfo.Id)}, 
-            {nameof(PollInfo.PublishmentSystemId)}, 
+            {nameof(PollInfo.SiteId)}, 
             {nameof(PollInfo.ChannelId)}, 
             {nameof(PollInfo.ContentId)}, 
             {nameof(PollInfo.IsImage)}, 
@@ -303,7 +303,7 @@ namespace SS.Poll.Provider
             var i = 0;
             pollInfo.Id = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
             i++;
-            pollInfo.PublishmentSystemId = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
+            pollInfo.SiteId = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
             i++;
             pollInfo.ChannelId = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
             i++;

@@ -10,11 +10,10 @@ namespace SS.Poll.Pages
     {
         public Literal LtlMessage;
         public DataGrid DgContents;
+
         public Button BtnAddField;
-        public Button BtnAddFields;
         public Button BtnImport;
         public Button BtnExport;
-        public Button BtnReturn;
 
         public static string GetRedirectUrl(int siteId, int channelId, int contentId, string returnUrl)
         {
@@ -59,7 +58,6 @@ namespace SS.Poll.Pages
             DgContents.ItemDataBound += DgContents_ItemDataBound;
             DgContents.DataBind();
 
-            BtnReturn.Attributes.Add("onclick", $"location.href='{ReturnUrl}';return false;");
             BtnAddField.Attributes.Add("onclick", ModalFieldAdd.GetOpenWindowString(SiteId, ChannelId, ContentId, 0));
         }
 

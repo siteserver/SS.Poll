@@ -45,14 +45,16 @@ namespace SS.Poll.Parse
             {
                 var logInfo = new LogInfo
                 {
-                    PollId = pollId,
+                    SiteId = pollInfo.SiteId,
+                    ChannelId = pollInfo.ChannelId,
+                    ContentId = pollInfo.ContentId,
                     ItemIds = string.Join(",", itemIds),
                     AddDate = DateTime.Now
                 };
 
                 var attributes = request.GetPostObject<Dictionary<string, string>>("attributes");
 
-                var fieldInfoList = Main.FieldDao.GetFieldInfoList(pollInfo.PublishmentSystemId, pollInfo.ChannelId, pollInfo.ContentId, false);
+                var fieldInfoList = Main.FieldDao.GetFieldInfoList(pollInfo.SiteId, pollInfo.ChannelId, pollInfo.ContentId, false);
                 foreach (var fieldInfo in fieldInfoList)
                 {
                     string value;
@@ -63,10 +65,10 @@ namespace SS.Poll.Parse
                 Main.LogDao.Insert(logInfo);
             }
 
-            Main.ItemDao.AddCount(pollId, itemIds);
+            Main.ItemDao.AddCount(pollInfo.SiteId, pollInfo.ChannelId, pollInfo.ContentId, itemIds);
 
             int totalCount;
-            var itemInfoList = Main.ItemDao.GetItemInfoList(pollId, out totalCount);
+            var itemInfoList = Main.ItemDao.GetItemInfoList(pollInfo.SiteId, pollInfo.ChannelId, pollInfo.ContentId, out totalCount);
             var items = new List<object>();
             foreach (var itemInfo in itemInfoList)
             {
@@ -78,7 +80,9 @@ namespace SS.Poll.Parse
                 items.Add(new
                 {
                     itemInfo.Id,
-                    itemInfo.PollId,
+                    itemInfo.SiteId,
+                    itemInfo.ChannelId,
+                    itemInfo.ContentId,
                     itemInfo.Title,
                     itemInfo.SubTitle,
                     itemInfo.ImageUrl,
@@ -101,7 +105,7 @@ namespace SS.Poll.Parse
             var pollInfo = Main.PollDao.GetPollInfo(context.SiteId, context.ChannelId, context.ContentId);
             if (pollInfo == null) return string.Empty;
 
-            var items = Main.ItemDao.GetItemInfoList(pollInfo.Id);
+            var items = Main.ItemDao.GetItemInfoList(context.SiteId, context.ChannelId, context.ContentId);
             if (items == null || items.Count == 0) return string.Empty;
 
             var itemBuilder = new StringBuilder();

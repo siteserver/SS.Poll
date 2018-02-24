@@ -6,7 +6,11 @@ namespace SS.Poll.Models
     {
         public int Id { get; set; }
 
-        public int PollId { get; set; }
+        public int SiteId { get; set; }
+
+        public int ChannelId { get; set; }
+
+        public int ContentId { get; set; }
 
         public string ItemIds { get; set; }
 

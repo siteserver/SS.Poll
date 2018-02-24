@@ -252,7 +252,7 @@ namespace SS.Poll.Pages
             var fieldInfo = new FieldInfo
             {
                 Id = 0,
-                PublishmentSystemId = SiteId,
+                SiteId = SiteId,
                 ChannelId = ChannelId,
                 ContentId = ContentId,
                 Taxis = 0,

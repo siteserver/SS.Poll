@@ -16,6 +16,6 @@
     <tags>SiteServer CMS Poll Plugin</tags>
   </metadata>
   <files>
-    <file src="build\**" target="Content\build"/>
+    <file src="assets\fonts\**" target="Content\assets\fonts"/>
   </files>
 </package>

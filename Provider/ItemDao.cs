@@ -18,7 +18,22 @@ namespace SS.Poll.Provider
             },
             new TableColumn
             {
-                AttributeName = nameof(ItemInfo.PollId),
+                AttributeName = nameof(ItemInfo.SiteId),
+                DataType = DataType.Integer
+            },
+            new TableColumn
+            {
+                AttributeName = nameof(ItemInfo.ChannelId),
+                DataType = DataType.Integer
+            },
+            new TableColumn
+            {
+                AttributeName = nameof(ItemInfo.ContentId),
+                DataType = DataType.Integer
+            },
+            new TableColumn
+            {
+                AttributeName = nameof(ItemInfo.Taxis),
                 DataType = DataType.Integer
             },
             new TableColumn
@@ -63,16 +78,24 @@ namespace SS.Poll.Provider
 
         public int Insert(ItemInfo itemInfo)
         {
+            itemInfo.Taxis = GetMaxTaxis(itemInfo.SiteId, itemInfo.ChannelId, itemInfo.ContentId) + 1;
+
             string sqlString = $@"INSERT INTO {TableName}
 (
-    {nameof(ItemInfo.PollId)}, 
+    {nameof(ItemInfo.SiteId)}, 
+    {nameof(ItemInfo.ChannelId)}, 
+    {nameof(ItemInfo.ContentId)}, 
+    {nameof(ItemInfo.Taxis)},
     {nameof(ItemInfo.Title)}, 
     {nameof(ItemInfo.SubTitle)}, 
     {nameof(ItemInfo.ImageUrl)}, 
     {nameof(ItemInfo.LinkUrl)}, 
     {nameof(ItemInfo.Count)}
 ) VALUES (
-    @{nameof(ItemInfo.PollId)}, 
+    @{nameof(ItemInfo.SiteId)}, 
+    @{nameof(ItemInfo.ChannelId)}, 
+    @{nameof(ItemInfo.ContentId)},
+    @{nameof(ItemInfo.Taxis)},
     @{nameof(ItemInfo.Title)}, 
     @{nameof(ItemInfo.SubTitle)}, 
     @{nameof(ItemInfo.ImageUrl)}, 
@@ -82,7 +105,10 @@ namespace SS.Poll.Provider
 
             var parameters = new List<IDataParameter>
             {
-                _helper.GetParameter(nameof(itemInfo.PollId), itemInfo.PollId),
+                _helper.GetParameter(nameof(itemInfo.SiteId), itemInfo.SiteId),
+                _helper.GetParameter(nameof(itemInfo.ChannelId), itemInfo.ChannelId),
+                _helper.GetParameter(nameof(itemInfo.ContentId), itemInfo.ContentId),
+                _helper.GetParameter(nameof(itemInfo.Taxis), itemInfo.Taxis),
                 _helper.GetParameter(nameof(itemInfo.Title), itemInfo.Title),
                 _helper.GetParameter(nameof(itemInfo.SubTitle), itemInfo.SubTitle),
                 _helper.GetParameter(nameof(itemInfo.ImageUrl), itemInfo.ImageUrl),
@@ -96,7 +122,10 @@ namespace SS.Poll.Provider
         public void Update(ItemInfo itemInfo)
         {
             string sqlString = $@"UPDATE {TableName} SET
-                {nameof(ItemInfo.PollId)} = @{nameof(ItemInfo.PollId)}, 
+                {nameof(ItemInfo.SiteId)} = @{nameof(ItemInfo.SiteId)}, 
+                {nameof(ItemInfo.ChannelId)} = @{nameof(ItemInfo.ChannelId)},
+                {nameof(ItemInfo.ContentId)} = @{nameof(ItemInfo.ContentId)},
+                {nameof(ItemInfo.Taxis)} = @{nameof(ItemInfo.Taxis)},
                 {nameof(ItemInfo.Title)} = @{nameof(ItemInfo.Title)}, 
                 {nameof(ItemInfo.SubTitle)} = @{nameof(ItemInfo.SubTitle)}, 
                 {nameof(ItemInfo.ImageUrl)} = @{nameof(ItemInfo.ImageUrl)}, 
@@ -106,7 +135,10 @@ namespace SS.Poll.Provider
 
             var parameters = new List<IDataParameter>
             {
-                _helper.GetParameter(nameof(itemInfo.PollId), itemInfo.PollId),
+                _helper.GetParameter(nameof(itemInfo.SiteId), itemInfo.SiteId),
+                _helper.GetParameter(nameof(itemInfo.ChannelId), itemInfo.ChannelId),
+                _helper.GetParameter(nameof(itemInfo.ContentId), itemInfo.ContentId),
+                _helper.GetParameter(nameof(itemInfo.Taxis), itemInfo.Taxis),
                 _helper.GetParameter(nameof(itemInfo.Title), itemInfo.Title),
                 _helper.GetParameter(nameof(itemInfo.SubTitle), itemInfo.SubTitle),
                 _helper.GetParameter(nameof(itemInfo.ImageUrl), itemInfo.ImageUrl),
@@ -118,12 +150,12 @@ namespace SS.Poll.Provider
             _helper.ExecuteNonQuery(_connectionString, sqlString, parameters.ToArray());
         }
 
-        public void DeleteAll(int pollId)
+        public void DeleteAll(int siteId, int channelId, int contentId)
         {
-            if (pollId <= 0) return;
+            if (siteId <= 0 || channelId <= 0 || contentId <= 0) return;
 
             string sqlString =
-                $"DELETE FROM {TableName} WHERE PollId = {pollId}";
+                $"DELETE FROM {TableName} WHERE {nameof(ItemInfo.SiteId)} = {siteId} AND {nameof(ItemInfo.ChannelId)} = {channelId} AND {nameof(ItemInfo.ContentId)} = {contentId}";
             _helper.ExecuteNonQuery(_connectionString, sqlString);
         }
 
@@ -141,7 +173,10 @@ namespace SS.Poll.Provider
             ItemInfo pollItemInfo = null;
 
             string sqlString = $@"SELECT {nameof(ItemInfo.Id)}, 
-            {nameof(ItemInfo.PollId)}, 
+            {nameof(ItemInfo.SiteId)}, 
+            {nameof(ItemInfo.ChannelId)}, 
+            {nameof(ItemInfo.ContentId)}, 
+            {nameof(ItemInfo.Taxis)}, 
             {nameof(ItemInfo.Title)}, 
             {nameof(ItemInfo.SubTitle)}, 
             {nameof(ItemInfo.ImageUrl)}, 
@@ -161,25 +196,28 @@ namespace SS.Poll.Provider
             return pollItemInfo;
         }
 
-        public List<ItemInfo> GetItemInfoList(int pollId)
+        public List<ItemInfo> GetItemInfoList(int siteId, int channelId, int contentId)
         {
             int totalCount;
-            return GetItemInfoList(pollId, out totalCount);
+            return GetItemInfoList(siteId, channelId, contentId, out totalCount);
         }
 
-        public List<ItemInfo> GetItemInfoList(int pollId, out int totalCount)
+        public List<ItemInfo> GetItemInfoList(int siteId, int channelId, int contentId, out int totalCount)
         {
             totalCount = 0;
             var list = new List<ItemInfo>();
 
             string sqlString = $@"SELECT {nameof(ItemInfo.Id)}, 
-            {nameof(ItemInfo.PollId)}, 
+            {nameof(ItemInfo.SiteId)}, 
+            {nameof(ItemInfo.ChannelId)}, 
+            {nameof(ItemInfo.ContentId)},
+            {nameof(ItemInfo.Taxis)},
             {nameof(ItemInfo.Title)},
             {nameof(ItemInfo.SubTitle)},
             {nameof(ItemInfo.ImageUrl)}, 
             {nameof(ItemInfo.LinkUrl)}, 
             {nameof(ItemInfo.Count)}
-            FROM {TableName} WHERE {nameof(ItemInfo.PollId)} = {pollId}";
+            FROM {TableName} WHERE {nameof(ItemInfo.SiteId)} = {siteId} AND {nameof(ItemInfo.ChannelId)} = {channelId} AND {nameof(ItemInfo.ContentId)} = {contentId}";
 
             using (var rdr = _helper.ExecuteReader(_connectionString, sqlString))
             {
@@ -195,13 +233,112 @@ namespace SS.Poll.Provider
             return list;
         }
 
-        public void AddCount(int pollId, List<int> itemIdList)
+        public void AddCount(int siteId, int channelId, int contentId, List<int> itemIdList)
         {
-            if (pollId <= 0 || itemIdList == null || itemIdList.Count <= 0) return;
+            if (siteId <= 0 || channelId <= 0 || contentId <= 0 || itemIdList == null || itemIdList.Count <= 0) return;
 
             string sqlString =
-                $"UPDATE {TableName} SET Count = Count + 1 WHERE {nameof(ItemInfo.Id)} IN ({string.Join(",", itemIdList)}) AND {nameof(ItemInfo.PollId)} = {pollId}";
+                $"UPDATE {TableName} SET Count = Count + 1 WHERE {nameof(ItemInfo.Id)} IN ({string.Join(",", itemIdList)}) AND {nameof(ItemInfo.SiteId)} = {siteId} AND {nameof(ItemInfo.ChannelId)} = {channelId} AND {nameof(ItemInfo.ContentId)} = {contentId}";
             _helper.ExecuteNonQuery(_connectionString, sqlString);
+        }
+
+        private int GetMaxTaxis(int siteId, int channelId, int contentId)
+        {
+            string sqlString =
+                $"SELECT MAX(Taxis) AS MaxTaxis FROM {TableName} WHERE {nameof(ItemInfo.SiteId)} = {siteId} AND {nameof(ItemInfo.ChannelId)} = {channelId} AND {nameof(ItemInfo.ContentId)} = {contentId}";
+            var maxTaxis = 0;
+
+            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString))
+            {
+                if (rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    maxTaxis = rdr.GetInt32(0);
+                }
+                rdr.Close();
+            }
+            return maxTaxis;
+        }
+
+        public void TaxisDown(int id)
+        {
+            var itemInfo = GetItemInfo(id);
+            if (itemInfo == null) return;
+
+            var sqlString = _helper.ToTopSqlString(TableName, "Id, Taxis", $"WHERE {nameof(ItemInfo.SiteId)} = @{nameof(ItemInfo.SiteId)} AND {nameof(ItemInfo.ChannelId)} = @{nameof(ItemInfo.ChannelId)} AND {nameof(ItemInfo.ContentId)} = @{nameof(ItemInfo.ContentId)} AND Taxis > (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis", 1);
+
+            var higherId = 0;
+            var higherTaxis = 0;
+
+            var parms = new[]
+            {
+                _helper.GetParameter(nameof(itemInfo.SiteId), itemInfo.SiteId),
+                _helper.GetParameter(nameof(itemInfo.ChannelId), itemInfo.ChannelId),
+                _helper.GetParameter(nameof(itemInfo.ContentId), itemInfo.ContentId),
+                _helper.GetParameter(nameof(itemInfo.Id), id)
+            };
+
+            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString, parms))
+            {
+                if (rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    higherId = rdr.GetInt32(0);
+                    higherTaxis = rdr.GetInt32(1);
+                }
+                rdr.Close();
+            }
+
+            if (higherId != 0)
+            {
+                SetTaxis(id, higherTaxis);
+                SetTaxis(higherId, itemInfo.Taxis);
+            }
+        }
+
+        public void TaxisUp(int id)
+        {
+            var itemInfo = GetItemInfo(id);
+            if (itemInfo == null) return;
+
+            var sqlString = _helper.ToTopSqlString(TableName, "Id, Taxis", $"WHERE {nameof(ItemInfo.SiteId)} = @{nameof(ItemInfo.SiteId)} AND {nameof(ItemInfo.ChannelId)} = @{nameof(ItemInfo.ChannelId)} AND {nameof(ItemInfo.ContentId)} = @{nameof(ItemInfo.ContentId)} AND Taxis < (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis DESC", 1);
+            var lowerId = 0;
+            var lowerTaxis = 0;
+
+            var parms = new[]
+            {
+                _helper.GetParameter(nameof(itemInfo.SiteId), itemInfo.SiteId),
+                _helper.GetParameter(nameof(itemInfo.ChannelId), itemInfo.ChannelId),
+                _helper.GetParameter(nameof(itemInfo.ContentId), itemInfo.ContentId),
+                _helper.GetParameter(nameof(itemInfo.Id), id)
+            };
+
+            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString, parms))
+            {
+                if (rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    lowerId = rdr.GetInt32(0);
+                    lowerTaxis = rdr.GetInt32(1);
+                }
+                rdr.Close();
+            }
+
+            if (lowerId != 0)
+            {
+                SetTaxis(id, lowerTaxis);
+                SetTaxis(lowerId, itemInfo.Taxis);
+            }
+        }
+
+        private void SetTaxis(int id, int taxis)
+        {
+            var sqlString = $"UPDATE {TableName} SET Taxis = @Taxis WHERE Id = @Id";
+
+            var parms = new[]
+            {
+                _helper.GetParameter(nameof(ItemInfo.Taxis), taxis),
+                _helper.GetParameter(nameof(ItemInfo.Id), id)
+            };
+
+            _helper.ExecuteNonQuery(_connectionString, sqlString, parms);
         }
 
         private static ItemInfo GetPollItemInfo(IDataRecord rdr)
@@ -213,7 +350,13 @@ namespace SS.Poll.Provider
             var i = 0;
             itemInfo.Id = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
             i++;
-            itemInfo.PollId = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
+            itemInfo.SiteId = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
+            i++;
+            itemInfo.ChannelId = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
+            i++;
+            itemInfo.ContentId = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
+            i++;
+            itemInfo.Taxis = rdr.IsDBNull(i) ? 0 : rdr.GetInt32(i);
             i++;
             itemInfo.Title = rdr.IsDBNull(i) ? string.Empty : rdr.GetString(i);
             i++;
