@@ -92,8 +92,8 @@
           <div class="m-b-25"></div>
 
           <asp:Button class="btn btn-primary" id="BtnAddItem" Text="新增投票项" runat="server" />
-          <asp:Button class="btn" id="BtnImport" Text="导 入" runat="server" />
-          <asp:Button class="btn" id="BtnExport" Text="导 出" runat="server" />
+          <!-- <asp:Button class="btn" id="BtnImport" Text="导 入" runat="server" />
+          <asp:Button class="btn" id="BtnExport" Text="导 出" runat="server" /> -->
 
         </div>
 

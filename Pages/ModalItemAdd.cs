@@ -47,7 +47,10 @@ namespace SS.Poll.Pages
 
             TbTitle.Text = itemInfo.Title;
             TbSubTitle.Text = itemInfo.SubTitle;
-            LtlImageUrl.Text = $@"<img id=""imageUrl"" src=""{itemInfo.ImageUrl}"" />";
+            LtlImageUrl.Text = !string.IsNullOrEmpty(itemInfo.ImageUrl)
+                ? $@"<img id=""imageUrl"" src=""{itemInfo.ImageUrl}"" class=""img-thumbnail"" />"
+                : @"<img id=""imageUrl"" src="""" class=""img-thumbnail"" style=""display: none"" />";
+            HfImageUrl.Value = itemInfo.ImageUrl;
             TbLinkUrl.Text = itemInfo.LinkUrl;
             TbCount.Text = itemInfo.Count.ToString();
 

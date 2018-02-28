@@ -19,8 +19,8 @@
           标题
           <asp:RequiredFieldValidator ControlToValidate="TbTitle" errorMessage=" *" foreColor="red" display="Dynamic" runat="server"
           />
-          <asp:RegularExpressionValidator runat="server" ControlToValidate="TbTitle" ValidationExpression="[a-zA-Z0-9_]+" ErrorMessage="字段名称只允许包含字母、数字以及下划线"
-            foreColor="red" Display="Dynamic" />
+          <asp:RegularExpressionValidator runat="server" ControlToValidate="TbTitle" ValidationExpression="[^']+" errorMessage=" *"
+            foreColor="red" display="Dynamic" />
         </label>
         <div class="col-10">
           <asp:TextBox class="form-control" Columns="25" MaxLength="50" id="TbTitle" runat="server" />
@@ -118,6 +118,7 @@
             if (response.success === 'true') {
               $('#upload_txt').text('');
               $('#imageUrl').attr('src', response.imageUrl + '?v=' + Math.random());
+              $('#imageUrl').show();
               $('#HfImageUrl').val(response.imageUrl);
             } else {
               $('#upload_txt').text(response.message);

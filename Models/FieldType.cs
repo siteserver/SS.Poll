@@ -1,4 +1,4 @@
-namespace SS.Poll.Models
+﻿namespace SS.Poll.Models
 {
 	public enum FieldType
 	{

@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Web.UI.WebControls;
 using SS.Poll.Models;
 
@@ -39,27 +39,27 @@ namespace SS.Poll.Core
         {
             if (type == FieldType.CheckBox)
             {
-                return "¸´Ñ¡ÁĞ±í(checkbox)";
+                return "å¤é€‰åˆ—è¡¨(checkbox)";
             }
             if (type == FieldType.Radio)
             {
-                return "µ¥Ñ¡ÁĞ±í(radio)";
+                return "å•é€‰åˆ—è¡¨(radio)";
             }
             if (type == FieldType.SelectOne)
             {
-                return "ÏÂÀ­ÁĞ±í(selectµ¥Ñ¡)";
+                return "ä¸‹æ‹‰åˆ—è¡¨(selectå•é€‰)";
             }
             if (type == FieldType.SelectMultiple)
             {
-                return "ÏÂÀ­ÁĞ±í(select¶àÑ¡)";
+                return "ä¸‹æ‹‰åˆ—è¡¨(selectå¤šé€‰)";
             }
             if (type == FieldType.Text)
             {
-                return "ÎÄ±¾¿ò(µ¥ĞĞ)";
+                return "æ–‡æœ¬æ¡†(å•è¡Œ)";
             }
             if (type == FieldType.TextArea)
             {
-                return "ÎÄ±¾¿ò(¶àĞĞ)";
+                return "æ–‡æœ¬æ¡†(å¤šè¡Œ)";
             }
             throw new Exception();
         }
