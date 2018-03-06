@@ -21,7 +21,7 @@ namespace SS.Poll.Pages
 
         public static string GetOpenWindowString(int siteId, int channelId, int contentId, int fieldId)
         {
-            return LayerUtils.GetOpenScript("设置验证规则", Main.Instance.PluginApi.GetPluginUrl($"{nameof(ModalFieldValidate)}.aspx?siteId={siteId}&channelId={channelId}&contentId={contentId}&fieldId={fieldId}"));
+            return LayerUtils.GetOpenScript("设置验证规则", $"{nameof(ModalFieldValidate)}.aspx?siteId={siteId}&channelId={channelId}&contentId={contentId}&fieldId={fieldId}");
         }
 
         public void Page_Load(object sender, EventArgs e)

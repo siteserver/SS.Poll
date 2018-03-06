@@ -28,7 +28,7 @@ namespace SS.Poll.Pages
 
         public static string GetOpenWindowString(int siteId, int channelId, int contentId, int fieldId)
         {
-            return LayerUtils.GetOpenScript(fieldId > 0 ? "编辑字段" : "新增字段", Main.Instance.PluginApi.GetPluginUrl($"{nameof(ModalFieldAdd)}.aspx?siteId={siteId}&channelId={channelId}&contentId={contentId}&fieldId={fieldId}"), 650, 600);
+            return LayerUtils.GetOpenScript(fieldId > 0 ? "编辑字段" : "新增字段", $"{nameof(ModalFieldAdd)}.aspx?siteId={siteId}&channelId={channelId}&contentId={contentId}&fieldId={fieldId}", 650, 600);
         }
 
         public void Page_Load(object sender, EventArgs e)

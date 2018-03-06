@@ -17,9 +17,7 @@ namespace SS.Poll.Pages
 
         public static string GetRedirectUrl(int siteId, int channelId, int contentId, string returnUrl)
         {
-            return
-                Main.Instance.PluginApi.GetPluginUrl(
-                    $"{nameof(PageFields)}.aspx?siteId={siteId}&channelId={channelId}&contentId={contentId}&returnUrl={HttpUtility.UrlEncode(returnUrl)}");
+            return $"{nameof(PageFields)}.aspx?siteId={siteId}&channelId={channelId}&contentId={contentId}&returnUrl={HttpUtility.UrlEncode(returnUrl)}";
         }
 
         private string PageUrl => GetRedirectUrl(SiteId, ChannelId, ContentId, ReturnUrl);

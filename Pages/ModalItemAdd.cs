@@ -21,11 +21,11 @@ namespace SS.Poll.Pages
 
         private int _itemId;
 
-        public string UploadUrl => Main.Instance.PluginApi.GetPluginUrl($"{nameof(ModalItemAdd)}.aspx?siteId={SiteId}&channelId={ChannelId}&contentId={ContentId}&itemId={_itemId}&upload=true");
+        public string UploadUrl => $"{nameof(ModalItemAdd)}.aspx?siteId={SiteId}&channelId={ChannelId}&contentId={ContentId}&itemId={_itemId}&upload=true";
 
         public static string GetOpenWindowString(int siteId, int channelId, int contentId, int itemId)
         {
-            return LayerUtils.GetOpenScript(itemId > 0 ? "编辑投票项" : "新增投票项", Main.Instance.PluginApi.GetPluginUrl($"{nameof(ModalItemAdd)}.aspx?siteId={siteId}&channelId={channelId}&contentId={contentId}&itemId={itemId}"), 650, 600);
+            return LayerUtils.GetOpenScript(itemId > 0 ? "编辑投票项" : "新增投票项", $"{nameof(ModalItemAdd)}.aspx?siteId={siteId}&channelId={channelId}&contentId={contentId}&itemId={itemId}", 650, 600);
         }
 
         public void Page_Load(object sender, EventArgs e)
