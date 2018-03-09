@@ -71,7 +71,7 @@ namespace SS.Poll.Pages
                 rows.Add(row);
             }
 
-            var relatedPath = "投票清单.csv";
+            var relatedPath = "投票提交记录.csv";
 
             CsvUtils.Export(Main.Instance.PluginApi.GetPluginPath(relatedPath), head, rows);
 
