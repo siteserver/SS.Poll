@@ -414,7 +414,7 @@ WHERE
             var fieldInfo = GetFieldInfo(id, false);
             if (fieldInfo == null) return;
 
-            var sqlString = _helper.ToTopSqlString(TableName, "Id, Taxis", $"WHERE {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND Taxis > (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis", 1);
+            var sqlString = _helper.GetPageSqlString(TableName, "Id, Taxis", $"WHERE {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND Taxis > (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis", 0, 1);
 
             var higherId = 0;
             var higherTaxis = 0;
@@ -449,7 +449,7 @@ WHERE
             var fieldInfo = GetFieldInfo(id, false);
             if (fieldInfo == null) return;
 
-            var sqlString = _helper.ToTopSqlString(TableName, "Id, Taxis", $"WHERE {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND Taxis < (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis DESC", 1);
+            var sqlString = _helper.GetPageSqlString(TableName, "Id, Taxis", $"WHERE {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND Taxis < (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis DESC", 0, 1);
             var lowerId = 0;
             var lowerTaxis = 0;
 

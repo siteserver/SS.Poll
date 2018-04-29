@@ -264,7 +264,7 @@ namespace SS.Poll.Provider
             var itemInfo = GetItemInfo(id);
             if (itemInfo == null) return;
 
-            var sqlString = _helper.ToTopSqlString(TableName, "Id, Taxis", $"WHERE {nameof(ItemInfo.SiteId)} = @{nameof(ItemInfo.SiteId)} AND {nameof(ItemInfo.ChannelId)} = @{nameof(ItemInfo.ChannelId)} AND {nameof(ItemInfo.ContentId)} = @{nameof(ItemInfo.ContentId)} AND Taxis > (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis", 1);
+            var sqlString = _helper.GetPageSqlString(TableName, "Id, Taxis", $"WHERE {nameof(ItemInfo.SiteId)} = @{nameof(ItemInfo.SiteId)} AND {nameof(ItemInfo.ChannelId)} = @{nameof(ItemInfo.ChannelId)} AND {nameof(ItemInfo.ContentId)} = @{nameof(ItemInfo.ContentId)} AND Taxis > (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis", 0, 1);
 
             var higherId = 0;
             var higherTaxis = 0;
@@ -299,7 +299,7 @@ namespace SS.Poll.Provider
             var itemInfo = GetItemInfo(id);
             if (itemInfo == null) return;
 
-            var sqlString = _helper.ToTopSqlString(TableName, "Id, Taxis", $"WHERE {nameof(ItemInfo.SiteId)} = @{nameof(ItemInfo.SiteId)} AND {nameof(ItemInfo.ChannelId)} = @{nameof(ItemInfo.ChannelId)} AND {nameof(ItemInfo.ContentId)} = @{nameof(ItemInfo.ContentId)} AND Taxis < (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis DESC", 1);
+            var sqlString = _helper.GetPageSqlString(TableName, "Id, Taxis", $"WHERE {nameof(ItemInfo.SiteId)} = @{nameof(ItemInfo.SiteId)} AND {nameof(ItemInfo.ChannelId)} = @{nameof(ItemInfo.ChannelId)} AND {nameof(ItemInfo.ContentId)} = @{nameof(ItemInfo.ContentId)} AND Taxis < (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis DESC", 0, 1);
             var lowerId = 0;
             var lowerTaxis = 0;
 
