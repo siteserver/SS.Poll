@@ -8,7 +8,7 @@
     <owners>siteserver</owners>
     <licenseUrl>https://github.com/siteserver/SS.Poll/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/siteserver/SS.Poll</projectUrl>
-    <iconUrl>http://plugins.siteserver.cn/ss.poll/logo.svg</iconUrl>
+    <iconUrl>https://plugins.siteserver.cn/ss.poll/logo.svg</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>使用完整的图片投票解决方案来获得您需要的答案</description>
     <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
