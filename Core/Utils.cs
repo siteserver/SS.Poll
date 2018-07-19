@@ -199,5 +199,65 @@ namespace SS.Poll.Core
                 return string.Empty;
             }
         }
+
+        public static T JsonDeserialize<T>(string json)
+        {
+            try
+            {
+                var settings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+                var timeFormat = new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd HH:mm:ss" };
+                settings.Converters.Add(timeFormat);
+
+                return JsonConvert.DeserializeObject<T>(json, settings);
+            }
+            catch
+            {
+                return default(T);
+            }
+        }
+
+        public static bool ToBool(string boolStr, bool defaultValue)
+        {
+            bool boolean;
+            if (!bool.TryParse(boolStr?.Trim(), out boolean))
+            {
+                boolean = defaultValue;
+            }
+            return boolean;
+        }
+
+        public static int ToIntWithNagetive(string intStr, int defaultValue)
+        {
+            int i;
+            if (!int.TryParse(intStr?.Trim(), out i))
+            {
+                i = defaultValue;
+            }
+            return i;
+        }
+
+        public static decimal ToDecimalWithNagetive(string intStr, decimal defaultValue)
+        {
+            decimal i;
+            if (!decimal.TryParse(intStr?.Trim(), out i))
+            {
+                i = defaultValue;
+            }
+            return i;
+        }
+
+        public static bool ContainsIgnoreCase(List<string> list, string str)
+        {
+            if (list == null || list.Count == 0) return false;
+            foreach (var item in list)
+            {
+                if (EqualsIgnoreCase(item, str))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

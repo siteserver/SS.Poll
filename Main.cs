@@ -5,7 +5,6 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Web.UI.WebControls;
 using SiteServer.Plugin;
 using SS.Poll.Core;
 using SS.Poll.Models;
@@ -38,10 +37,10 @@ namespace SS.Poll
             FieldItemDao = new FieldItemDao(ConnectionString, DataApi);
 
             service
-                .AddContentLink(new HyperLink
+                .AddContentMenu(new Menu
                 {
                     Text = "投票管理",
-                    NavigateUrl = $"{nameof(PageItems)}.aspx"
+                    Href = $"{nameof(PageItems)}.aspx"
                 })
                 .AddDatabaseTable(PollDao.TableName, PollDao.Columns)
                 .AddDatabaseTable(ItemDao.TableName, ItemDao.Columns)
@@ -72,8 +71,8 @@ namespace SS.Poll
             service.ApiGet += (sender, args) =>
             {
                 var request = args.Request;
-                var action = args.Action;
-                var id = args.Id;
+                var action = args.RouteResource;
+                var id = args.RouteId;
 
                 if (!string.IsNullOrEmpty(action) && !string.IsNullOrEmpty(id))
                 {
@@ -110,7 +109,7 @@ namespace SS.Poll
                         var ms = new MemoryStream();
                         validateimage.Save(ms, ImageFormat.Png);
 
-                        request.SetCookie("ss-poll:" + args.Id, validateCode, DateTime.Now.AddDays(1));
+                        request.SetCookie("ss-poll:" + args.RouteId, validateCode, DateTime.Now.AddDays(1));
 
                         response.Content = new ByteArrayContent(ms.ToArray());
                         response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
@@ -173,8 +172,8 @@ namespace SS.Poll
             service.ApiPost += (sender, args) =>
             {
                 var request = args.Request;
-                var action = args.Action;
-                var id = args.Id;
+                var action = args.RouteResource;
+                var id = args.RouteId;
 
                 if (!string.IsNullOrEmpty(action) && !string.IsNullOrEmpty(id))
                 {

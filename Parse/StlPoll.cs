@@ -178,8 +178,8 @@ namespace SS.Poll.Parse
             }
 
             var pluginUrl = Main.Instance.PluginApi.GetPluginUrl();
-            var apiUrlSubmit = Main.Instance.PluginApi.GetPluginApiUrl(nameof(ApiSubmit), pollInfo.Id.ToString());
-            var imgUrl = Main.Instance.PluginApi.GetPluginApiUrl("code", pollInfo.Id.ToString());
+            var apiUrlSubmit = $"{Main.Instance.PluginApi.PluginApiUrl}/{nameof(ApiSubmit)}/{pollInfo.Id}";
+            var imgUrl = $"{Main.Instance.PluginApi.PluginApiUrl}/code/{pollInfo.Id}";
             var submitHtml = string.Empty;
             if (pollInfo.IsProfile)
             {
