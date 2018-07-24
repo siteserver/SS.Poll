@@ -29,12 +29,12 @@ namespace SS.Poll
         {
             Instance = this;
 
-            Dao = new Dao(ConnectionString, DataApi);
-            PollDao = new PollDao(ConnectionString, DataApi);
-            ItemDao = new ItemDao(ConnectionString, DataApi);
-            LogDao = new LogDao(ConnectionString, DataApi);
-            FieldDao = new FieldDao(ConnectionString, DataApi);
-            FieldItemDao = new FieldItemDao(ConnectionString, DataApi);
+            Dao = new Dao(ConnectionString, DatabaseApi);
+            PollDao = new PollDao(ConnectionString, DatabaseApi);
+            ItemDao = new ItemDao(ConnectionString, DatabaseApi);
+            LogDao = new LogDao(ConnectionString, DatabaseApi);
+            FieldDao = new FieldDao(ConnectionString, DatabaseApi);
+            FieldItemDao = new FieldItemDao(ConnectionString, DatabaseApi);
 
             service
                 .AddContentMenu(new Menu

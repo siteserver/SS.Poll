@@ -68,9 +68,9 @@ namespace SS.Poll.Provider
         };
 
         private readonly string _connectionString;
-        private readonly IDataApi _helper;
+        private readonly IDatabaseApi _helper;
 
-        public ItemDao(string connectionString, IDataApi dataApi)
+        public ItemDao(string connectionString, IDatabaseApi dataApi)
         {
             _connectionString = connectionString;
             _helper = dataApi;
