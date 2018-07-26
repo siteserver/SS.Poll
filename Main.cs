@@ -68,11 +68,11 @@ namespace SS.Poll
                 PollDao.Delete(args.SiteId, args.ChannelId, args.ContentId);
             };
 
-            service.ApiGet += (sender, args) =>
+            service.RestApiGet += (sender, e) =>
             {
-                var request = args.Request;
-                var action = args.RouteResource;
-                var id = args.RouteId;
+                var request = e.Request;
+                var action = e.RouteResource;
+                var id = e.RouteId;
 
                 if (!string.IsNullOrEmpty(action) && !string.IsNullOrEmpty(id))
                 {
@@ -109,7 +109,7 @@ namespace SS.Poll
                         var ms = new MemoryStream();
                         validateimage.Save(ms, ImageFormat.Png);
 
-                        request.SetCookie("ss-poll:" + args.RouteId, validateCode, DateTime.Now.AddDays(1));
+                        request.SetCookie("ss-poll:" + e.RouteId, validateCode, DateTime.Now.AddDays(1));
 
                         response.Content = new ByteArrayContent(ms.ToArray());
                         response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
@@ -169,11 +169,11 @@ namespace SS.Poll
                 throw new Exception("请求的资源不在服务器上");
             };
 
-            service.ApiPost += (sender, args) =>
+            service.RestApiPost += (sender, e) =>
             {
-                var request = args.Request;
-                var action = args.RouteResource;
-                var id = args.RouteId;
+                var request = e.Request;
+                var action = e.RouteResource;
+                var id = e.RouteId;
 
                 if (!string.IsNullOrEmpty(action) && !string.IsNullOrEmpty(id))
                 {
