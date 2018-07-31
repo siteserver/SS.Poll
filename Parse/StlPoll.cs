@@ -236,45 +236,54 @@ namespace SS.Poll.Parse
 <link rel=""stylesheet"" type=""text/css"" href=""{pluginUrl}/css/base.css"" />
   <div id=""poll{pollInfo.Id}"">
     
-    <div class=""poll_wrap"" v-show=""isTimeout && timeToStart > new Date()"">
-      <div class=""poll_submit"">
-        <h3 class=""error"" style=""display: block"">投票将于{pollInfo.TimeToStart:yyyy-MM-dd HH:mm}开始，请耐心等待！</h3>
-      </div>
-    </div>
-    <div class=""poll_wrap"" v-show=""isTimeout && timeToEnd < new Date()"">
-      <div class=""poll_submit"">
-        <h3 class=""error"" style=""display: block"">投票已结束，谢谢！</h3>
-      </div>
-    </div>
-
-    <div class=""poll_wrap"" v-show=""(!isTimeout || (timeToStart < new Date() && timeToEnd > new Date())) && !items"">
-      <div class=""poll_list"">
-        <ul>
-            {itemBuilder}
-        </ul>
-      </div>
-      <div class=""poll_submit"">
-        <h3 class=""error"" style=""display: none"" v-show=""errors.has('itemIds')"">请选择投票项</h3>
-        <h3 class=""error"" style=""display: none"" v-show=""errorMessage"" v-html=""errorMessage""></h3>
-        {submitHtml}
-        <a href=""javascript:;"" v-on:click=""submit"" class=""poll_btn"">提 交</a>
-      </div>
-    </div>
-
-    <div class=""results_wrap"" v-show=""(!isTimeout || (timeToStart < new Date() && timeToEnd > new Date())) && items"" style=""display: none"">
-      <div class=""header_bg survey_bg""></div>
-      <div class=""vote1_cont {(pollInfo.IsImage ? "" : "vote1_cont1")}"">
-        <div class=""vote1_title"" v-show=""isResult"">
-          总计：{{{{ totalCount }}}}票
+    <template v-if=""isTimeout && timeToStart > new Date()"">
+        <div class=""poll_wrap"">
+          <div class=""poll_submit"">
+            <h3 class=""error"" style=""display: block"">投票将于{pollInfo.TimeToStart:yyyy-MM-dd HH:mm}开始，请耐心等待！</h3>
+          </div>
         </div>
-        <ul v-show=""isResult"">
-          {result}
-        </ul>
-        <div class=""vote1_title"" v-show=""!isResult"">
-          投票已提交，感谢参与！
+    </template>
+
+    <template v-if=""isTimeout && timeToEnd < new Date()"">
+        <div class=""poll_wrap"">
+          <div class=""poll_submit"">
+            <h3 class=""error"" style=""display: block"">投票已结束，谢谢！</h3>
+          </div>
         </div>
-      </div>
-    </div>
+    </template>
+
+    <template v-if=""(!isTimeout || (timeToStart < new Date() && timeToEnd > new Date())) && !items"">
+        <div class=""poll_wrap"">
+          <div class=""poll_list"">
+            <ul>
+                {itemBuilder}
+            </ul>
+          </div>
+          <div class=""poll_submit"">
+            <h3 class=""error"" style=""display: none"" v-show=""errors.has('itemIds')"">请选择投票项</h3>
+            <h3 class=""error"" style=""display: none"" v-show=""errorMessage"" v-html=""errorMessage""></h3>
+            {submitHtml}
+            <a href=""javascript:;"" v-on:click=""submit"" class=""poll_btn"">提 交</a>
+          </div>
+        </div>
+    </template>
+
+    <template v-if=""(!isTimeout || (timeToStart < new Date() && timeToEnd > new Date())) && items"">
+        <div class=""results_wrap"">
+          <div class=""header_bg survey_bg""></div>
+          <div class=""vote1_cont {(pollInfo.IsImage ? "" : "vote1_cont1")}"">
+            <div class=""vote1_title"" v-show=""isResult"">
+              总计：{{{{ totalCount }}}}票
+            </div>
+            <ul v-show=""isResult"">
+              {result}
+            </ul>
+            <div class=""vote1_title"" v-show=""!isResult"">
+              投票已提交，感谢参与！
+            </div>
+          </div>
+        </div>
+    </template>
 
   </div>
 
