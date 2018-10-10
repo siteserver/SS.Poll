@@ -34,8 +34,8 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SiteServer.Plugin, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\SiteServer.Plugin.2.0.0\lib\net45\SiteServer.Plugin.dll</HintPath>
+    <Reference Include="SiteServer.Plugin, Version=2.0.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\SiteServer.Plugin.2.0.11\lib\net45\SiteServer.Plugin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -57,9 +57,11 @@
     <Compile Include="Core\FieldTypeParser.cs" />
     <Compile Include="Core\FieldTypeUtils.cs" />
     <Compile Include="Core\LayerUtils.cs" />
+    <Compile Include="Core\StringUtils.cs" />
+    <Compile Include="Core\TranslateUtils.cs" />
     <Compile Include="Core\Utils.cs" />
     <Compile Include="Core\ValidateTypeUtils.cs" />
-    <Compile Include="Models\ExtendedAttributes.cs" />
+    <Compile Include="Models\AttributesImpl.cs" />
     <Compile Include="Models\FieldSettings.cs" />
     <Compile Include="Models\FieldInfo.cs" />
     <Compile Include="Models\FieldItemInfo.cs" />

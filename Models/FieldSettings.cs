@@ -3,7 +3,7 @@ using SS.Poll.Core;
 
 namespace SS.Poll.Models
 {
-    public class FieldSettings : ExtendedAttributes
+    public class FieldSettings : AttributesImpl
     {
         public FieldSettings(string extendValues): base(extendValues) { }
 
