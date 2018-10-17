@@ -73,9 +73,9 @@ namespace SS.Poll.Pages
 
             var relatedPath = "投票提交记录.csv";
 
-            CsvUtils.Export(Main.Instance.PluginApi.GetPluginPath(relatedPath), head, rows);
+            CsvUtils.Export(SiteServer.Plugin.Context.PluginApi.GetPluginPath(Main.PluginId, relatedPath), head, rows);
 
-            HttpContext.Current.Response.Redirect(Main.Instance.PluginApi.GetPluginUrl(relatedPath));
+            HttpContext.Current.Response.Redirect(SiteServer.Plugin.Context.PluginApi.GetPluginUrl(Main.PluginId, relatedPath));
         }
 
         private void RptLogs_ItemDataBound(object sender, RepeaterItemEventArgs e)

@@ -16,25 +16,28 @@ namespace SS.Poll
 {
     public class Main : PluginBase
     {
-        public static Dao Dao { get; private set; }
-        public static PollDao PollDao { get; private set; }
-        public static ItemDao ItemDao { get; private set; }
-        public static LogDao LogDao { get; private set; }
-        public static FieldDao FieldDao { get; private set; }
-        public static FieldItemDao FieldItemDao { get; private set; }
+        public static string PluginId { get; private set; }
 
-        internal static Main Instance { get; private set; }
+        public static Dao Dao { get; }
+        public static PollDao PollDao { get; }
+        public static ItemDao ItemDao { get; }
+        public static LogDao LogDao { get; }
+        public static FieldDao FieldDao { get; }
+        public static FieldItemDao FieldItemDao { get; }
+
+        static Main()
+        {
+            Dao = new Dao(Context.ConnectionString, Context.DatabaseApi);
+            PollDao = new PollDao(Context.ConnectionString, Context.DatabaseApi);
+            ItemDao = new ItemDao(Context.ConnectionString, Context.DatabaseApi);
+            LogDao = new LogDao(Context.ConnectionString, Context.DatabaseApi);
+            FieldDao = new FieldDao(Context.ConnectionString, Context.DatabaseApi);
+            FieldItemDao = new FieldItemDao(Context.ConnectionString, Context.DatabaseApi);
+        }
 
         public override void Startup(IService service)
         {
-            Instance = this;
-
-            Dao = new Dao(ConnectionString, DatabaseApi);
-            PollDao = new PollDao(ConnectionString, DatabaseApi);
-            ItemDao = new ItemDao(ConnectionString, DatabaseApi);
-            LogDao = new LogDao(ConnectionString, DatabaseApi);
-            FieldDao = new FieldDao(ConnectionString, DatabaseApi);
-            FieldItemDao = new FieldItemDao(ConnectionString, DatabaseApi);
+            PluginId = Id;
 
             service
                 .AddContentMenu(new Menu

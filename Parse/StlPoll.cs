@@ -177,9 +177,9 @@ namespace SS.Poll.Parse
 ";
             }
 
-            var pluginUrl = Main.Instance.PluginApi.GetPluginUrl();
-            var apiUrlSubmit = $"{Main.Instance.PluginApi.PluginApiUrl}/{nameof(ApiSubmit)}/{pollInfo.Id}";
-            var imgUrl = $"{Main.Instance.PluginApi.PluginApiUrl}/code/{pollInfo.Id}";
+            var pluginUrl = Context.PluginApi.GetPluginUrl(Main.PluginId);
+            var apiUrlSubmit = $"{Context.PluginApi.GetPluginApiUrl(Main.PluginId)}/{nameof(ApiSubmit)}/{pollInfo.Id}";
+            var imgUrl = $"{Context.PluginApi.GetPluginApiUrl(Main.PluginId)}/code/{pollInfo.Id}";
             var submitHtml = string.Empty;
             if (pollInfo.IsProfile)
             {

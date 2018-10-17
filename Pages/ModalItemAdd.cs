@@ -75,9 +75,9 @@ namespace SS.Poll.Pages
                         var fileExtName = filePath.ToLower().Substring(filePath.LastIndexOf(".", StringComparison.Ordinal) + 1);
                         if (fileExtName == "jpg" || fileExtName == "jpeg" || fileExtName == "png" || fileExtName == "gif")
                         {
-                            var localFilePath = Main.Instance.UtilsApi.GetUploadFilePath(SiteId, filePath);
+                            var localFilePath = SiteServer.Plugin.Context.UtilsApi.GetUploadFilePath(SiteId, filePath);
                             postedFile.SaveAs(localFilePath);
-                            imageUrl = Main.Instance.SiteApi.GetSiteUrlByFilePath(localFilePath);
+                            imageUrl = SiteServer.Plugin.Context.SiteApi.GetSiteUrlByFilePath(localFilePath);
                             success = true;
                         }
                     }

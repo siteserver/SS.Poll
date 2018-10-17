@@ -34,7 +34,7 @@ namespace SS.Poll.Models
                 var name = reader.GetName(i);
                 var value = reader.GetValue(i);
 
-                if (value is string && Main.Instance.DatabaseType == DatabaseType.Oracle && (string)value == "_EMPTY_")
+                if (value is string && Context.DatabaseType == DatabaseType.Oracle && (string)value == "_EMPTY_")
                 {
                     value = string.Empty;
                 }
@@ -56,7 +56,7 @@ namespace SS.Poll.Models
                 var name = record.GetName(i);
                 var value = record.GetValue(i);
 
-                if (value is string && Main.Instance.DatabaseType == DatabaseType.Oracle && (string)value == "_EMPTY_")
+                if (value is string && Context.DatabaseType == DatabaseType.Oracle && (string)value == "_EMPTY_")
                 {
                     value = string.Empty;
                 }

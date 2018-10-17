@@ -33,7 +33,7 @@ namespace SS.Poll.Pages
             ContentId = Convert.ToInt32(Request.QueryString["contentId"]);
             ReturnUrl = HttpUtility.UrlDecode(Request.QueryString["returnUrl"]);
 
-            if (!Main.Instance.Request.AdminPermissions.HasSitePermissions(SiteId, Main.Instance.Id))
+            if (!SiteServer.Plugin.Context.Request.AdminPermissions.HasSitePermissions(SiteId, Main.PluginId))
             {
                 Response.Write("<h1>未授权访问</h1>");
                 Response.End();
