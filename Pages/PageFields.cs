@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.UI.WebControls;
 using SS.Poll.Core;
 using SS.Poll.Models;
+using SS.Poll.Provider;
 
 namespace SS.Poll.Pages
 {
@@ -30,7 +31,7 @@ namespace SS.Poll.Pages
             if (!string.IsNullOrEmpty(Request.QueryString["delete"]))
             {
                 var fieldId = Convert.ToInt32(Request.QueryString["fieldId"]);
-                Main.FieldDao.Delete(fieldId);
+                FieldDao.Delete(fieldId);
                 LtlMessage.Text = Utils.GetMessageHtml("字段删除成功！", true);
             }
             if (!string.IsNullOrEmpty(Request.QueryString["taxis"]))
@@ -41,16 +42,16 @@ namespace SS.Poll.Pages
                 switch (direction.ToUpper())
                 {
                     case "UP":
-                        Main.FieldDao.TaxisUp(fieldId);
+                        FieldDao.TaxisUp(fieldId);
                         break;
                     case "DOWN":
-                        Main.FieldDao.TaxisDown(fieldId);
+                        FieldDao.TaxisDown(fieldId);
                         break;
                 }
                 LtlMessage.Text = Utils.GetMessageHtml("排序成功！", true);
             }
 
-            var fieldList = Main.FieldDao.GetFieldInfoList(SiteId, ChannelId, ContentId, false);
+            var fieldList = FieldDao.GetFieldInfoList(SiteId, ChannelId, ContentId, false);
 
             DgContents.DataSource = fieldList;
             DgContents.ItemDataBound += DgContents_ItemDataBound;

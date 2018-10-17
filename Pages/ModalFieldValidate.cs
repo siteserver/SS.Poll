@@ -2,6 +2,7 @@
 using System.Web.UI.WebControls;
 using SS.Poll.Core;
 using SS.Poll.Models;
+using SS.Poll.Provider;
 
 namespace SS.Poll.Pages
 {
@@ -30,7 +31,7 @@ namespace SS.Poll.Pages
 
             if (IsPostBack) return;
 
-            var fieldInfo = Main.FieldDao.GetFieldInfo(_fieldId, false);
+            var fieldInfo = FieldDao.GetFieldInfo(_fieldId, false);
 
             var settings = new FieldSettings(fieldInfo.FieldSettings);
             Utils.SelectListItems(DdlIsValidate, settings.IsValidate.ToString());
@@ -66,7 +67,7 @@ namespace SS.Poll.Pages
             var isChanged = false;
 
             var fieldId = Convert.ToInt32(Request.QueryString["fieldId"]);
-            var fieldInfo = Main.FieldDao.GetFieldInfo(fieldId, false);
+            var fieldInfo = FieldDao.GetFieldInfo(fieldId, false);
             var settings = new FieldSettings(fieldInfo.FieldSettings)
             {
                 IsValidate = Convert.ToBoolean(DdlIsValidate.SelectedValue),
@@ -81,7 +82,7 @@ namespace SS.Poll.Pages
 
             try
             {
-                Main.FieldDao.Update(fieldInfo);
+                FieldDao.Update(fieldInfo);
                 isChanged = true;
             }
             catch (Exception ex)

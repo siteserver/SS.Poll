@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.UI.WebControls;
 using SS.Poll.Controls;
 using SS.Poll.Core;
+using SS.Poll.Provider;
 
 namespace SS.Poll.Pages
 {
@@ -72,7 +73,7 @@ namespace SS.Poll.Pages
             PollInfo.IsProfile = CbIsProfile.Checked;
             PollInfo.IsResult = CbIsResult.Checked;
 
-            Main.PollDao.Update(PollInfo);
+            PollDao.Update(PollInfo);
 
             LtlMessage.Text = Utils.GetMessageHtml("设置保存成功！", true);
         }

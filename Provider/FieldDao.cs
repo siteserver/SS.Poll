@@ -6,7 +6,7 @@ using SS.Poll.Models;
 
 namespace SS.Poll.Provider
 {
-    public class FieldDao
+    public static class FieldDao
     {
         public const string TableName = "ss_poll_field";
 
@@ -78,15 +78,6 @@ namespace SS.Poll.Provider
             }
         };
 
-        private readonly string _connectionString;
-        private readonly IDatabaseApi _helper;
-
-        public FieldDao(string connectionString, IDatabaseApi dataApi)
-        {
-            _connectionString = connectionString;
-            _helper = dataApi;
-        }
-
         private const string ParmId = "@Id";
         private const string ParmSiteId = "@SiteId";
         private const string ParmChannelId = "@ChannelId";
@@ -100,7 +91,7 @@ namespace SS.Poll.Provider
         private const string ParmFieldType = "@FieldType";
         private const string ParmFieldSettings = "@FieldSettings";
 
-        public int Insert(FieldInfo fieldInfo)
+        public static int Insert(FieldInfo fieldInfo)
         {
             fieldInfo.Taxis = GetMaxTaxis(fieldInfo.SiteId, fieldInfo.ChannelId, fieldInfo.ContentId) + 1;
 
@@ -133,23 +124,23 @@ namespace SS.Poll.Provider
 
             var parameters = new []
 			{
-				_helper.GetParameter(ParmSiteId, fieldInfo.SiteId),
-                _helper.GetParameter(ParmChannelId, fieldInfo.ChannelId),
-                _helper.GetParameter(ParmContentId, fieldInfo.ContentId),
-                _helper.GetParameter(ParmTaxis, fieldInfo.Taxis),
-                _helper.GetParameter(ParmAttributeName, fieldInfo.AttributeName),
-                _helper.GetParameter(ParmAttributeValue, fieldInfo.AttributeValue),
-                _helper.GetParameter(ParmDisplayName, fieldInfo.DisplayName),
-                _helper.GetParameter(ParmPlaceHolder, fieldInfo.PlaceHolder),
-                _helper.GetParameter(ParmIsDisabled, fieldInfo.IsDisabled),
-                _helper.GetParameter(ParmFieldType, fieldInfo.FieldType),
-                _helper.GetParameter(ParmFieldSettings, fieldInfo.FieldSettings)
+				Context.DatabaseApi.GetParameter(ParmSiteId, fieldInfo.SiteId),
+                Context.DatabaseApi.GetParameter(ParmChannelId, fieldInfo.ChannelId),
+                Context.DatabaseApi.GetParameter(ParmContentId, fieldInfo.ContentId),
+                Context.DatabaseApi.GetParameter(ParmTaxis, fieldInfo.Taxis),
+                Context.DatabaseApi.GetParameter(ParmAttributeName, fieldInfo.AttributeName),
+                Context.DatabaseApi.GetParameter(ParmAttributeValue, fieldInfo.AttributeValue),
+                Context.DatabaseApi.GetParameter(ParmDisplayName, fieldInfo.DisplayName),
+                Context.DatabaseApi.GetParameter(ParmPlaceHolder, fieldInfo.PlaceHolder),
+                Context.DatabaseApi.GetParameter(ParmIsDisabled, fieldInfo.IsDisabled),
+                Context.DatabaseApi.GetParameter(ParmFieldType, fieldInfo.FieldType),
+                Context.DatabaseApi.GetParameter(ParmFieldSettings, fieldInfo.FieldSettings)
 			};
 
-            return _helper.ExecuteNonQueryAndReturnId(TableName, nameof(FieldInfo.Id), _connectionString, sqlString, parameters);
+            return Context.DatabaseApi.ExecuteNonQueryAndReturnId(TableName, nameof(FieldInfo.Id), Context.ConnectionString, sqlString, parameters);
         }
 
-        public void Update(FieldInfo info)
+        public static void Update(FieldInfo info)
         {
             string sqlString = $@"UPDATE {TableName} SET
                 {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)}, 
@@ -167,38 +158,38 @@ namespace SS.Poll.Provider
 
             var updateParms = new []
 			{
-				_helper.GetParameter(ParmSiteId, info.SiteId),
-                _helper.GetParameter(ParmChannelId, info.ChannelId),
-                _helper.GetParameter(ParmContentId, info.ContentId),
-                _helper.GetParameter(ParmTaxis, info.Taxis),
-                _helper.GetParameter(ParmAttributeName, info.AttributeName),
-                _helper.GetParameter(ParmAttributeValue, info.AttributeValue),
-                _helper.GetParameter(ParmDisplayName, info.DisplayName),
-                _helper.GetParameter(ParmPlaceHolder, info.PlaceHolder),
-                _helper.GetParameter(ParmIsDisabled, info.IsDisabled),
-                _helper.GetParameter(ParmFieldType, info.FieldType),
-                _helper.GetParameter(ParmFieldSettings, info.FieldSettings),
-                _helper.GetParameter(ParmId, info.Id)
+				Context.DatabaseApi.GetParameter(ParmSiteId, info.SiteId),
+                Context.DatabaseApi.GetParameter(ParmChannelId, info.ChannelId),
+                Context.DatabaseApi.GetParameter(ParmContentId, info.ContentId),
+                Context.DatabaseApi.GetParameter(ParmTaxis, info.Taxis),
+                Context.DatabaseApi.GetParameter(ParmAttributeName, info.AttributeName),
+                Context.DatabaseApi.GetParameter(ParmAttributeValue, info.AttributeValue),
+                Context.DatabaseApi.GetParameter(ParmDisplayName, info.DisplayName),
+                Context.DatabaseApi.GetParameter(ParmPlaceHolder, info.PlaceHolder),
+                Context.DatabaseApi.GetParameter(ParmIsDisabled, info.IsDisabled),
+                Context.DatabaseApi.GetParameter(ParmFieldType, info.FieldType),
+                Context.DatabaseApi.GetParameter(ParmFieldSettings, info.FieldSettings),
+                Context.DatabaseApi.GetParameter(ParmId, info.Id)
 			};
 
-            _helper.ExecuteNonQuery(_connectionString, sqlString, updateParms);
+            Context.DatabaseApi.ExecuteNonQuery(Context.ConnectionString, sqlString, updateParms);
         }
 
-        public void Delete(int fieldId)
+        public static void Delete(int fieldId)
         {
             string sqlString = $"DELETE FROM {TableName} WHERE {nameof(FieldInfo.Id)} = @{nameof(FieldInfo.Id)}";
 
             var parms = new []
             {
-                _helper.GetParameter(ParmId, fieldId)
+                Context.DatabaseApi.GetParameter(ParmId, fieldId)
             };
 
-            _helper.ExecuteNonQuery(_connectionString, sqlString, parms);
+            Context.DatabaseApi.ExecuteNonQuery(Context.ConnectionString, sqlString, parms);
 
-            Main.FieldItemDao.DeleteItems(fieldId);
+            FieldItemDao.DeleteItems(fieldId);
         }
 
-        public List<FieldInfo> GetFieldInfoList(int siteId, int channelId, int contentId, bool isItems)
+        public static List<FieldInfo> GetFieldInfoList(int siteId, int channelId, int contentId, bool isItems)
         {
             var list = new List<FieldInfo>();
 
@@ -225,12 +216,12 @@ ORDER BY {nameof(FieldInfo.Taxis)}";
 
             var parameters = new[]
             {
-                _helper.GetParameter(ParmSiteId, siteId),
-                _helper.GetParameter(ParmChannelId, channelId),
-                _helper.GetParameter(ParmContentId, contentId)
+                Context.DatabaseApi.GetParameter(ParmSiteId, siteId),
+                Context.DatabaseApi.GetParameter(ParmChannelId, channelId),
+                Context.DatabaseApi.GetParameter(ParmContentId, contentId)
             };
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString, parameters))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString, parameters))
             {
                 while (rdr.Read())
                 {
@@ -241,7 +232,7 @@ ORDER BY {nameof(FieldInfo.Taxis)}";
                         {
                             if (Utils.EqualsIgnoreCase(fieldInfo.FieldType, nameof(FieldType.CheckBox)) || Utils.EqualsIgnoreCase(fieldInfo.FieldType, nameof(FieldType.Radio)) || Utils.EqualsIgnoreCase(fieldInfo.FieldType, nameof(FieldType.SelectMultiple)) || Utils.EqualsIgnoreCase(fieldInfo.FieldType, nameof(FieldType.SelectOne)))
                             {
-                                var items = Main.FieldItemDao.GetItemInfoList(fieldInfo.Id);
+                                var items = FieldItemDao.GetItemInfoList(fieldInfo.Id);
                                 if (items != null && items.Count > 0)
                                 {
                                     fieldInfo.Items = items;
@@ -257,7 +248,7 @@ ORDER BY {nameof(FieldInfo.Taxis)}";
             return list;
         }
 
-        public bool IsExists(int siteId, int channelId, int contentId, string attributeName)
+        public static bool IsExists(int siteId, int channelId, int contentId, string attributeName)
         {
             var exists = false;
 
@@ -269,13 +260,13 @@ ORDER BY {nameof(FieldInfo.Taxis)}";
 
             var parms = new []
 			{
-                _helper.GetParameter(ParmSiteId, siteId),
-                _helper.GetParameter(ParmChannelId, channelId),
-                _helper.GetParameter(ParmContentId, contentId),
-                _helper.GetParameter(ParmAttributeName, attributeName)
+                Context.DatabaseApi.GetParameter(ParmSiteId, siteId),
+                Context.DatabaseApi.GetParameter(ParmChannelId, channelId),
+                Context.DatabaseApi.GetParameter(ParmContentId, contentId),
+                Context.DatabaseApi.GetParameter(ParmAttributeName, attributeName)
             };
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString, parms))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString, parms))
             {
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -287,7 +278,7 @@ ORDER BY {nameof(FieldInfo.Taxis)}";
             return exists;
         }
 
-        public int GetCount(int siteId, int channelId, int contentId)
+        public static int GetCount(int siteId, int channelId, int contentId)
         {
             string sqlString = $@"SELECT COUNT(*) FROM {TableName} WHERE 
     {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND 
@@ -296,15 +287,15 @@ ORDER BY {nameof(FieldInfo.Taxis)}";
 
             var parms = new[]
             {
-                _helper.GetParameter(ParmSiteId, siteId),
-                _helper.GetParameter(ParmChannelId, channelId),
-                _helper.GetParameter(ParmContentId, contentId)
+                Context.DatabaseApi.GetParameter(ParmSiteId, siteId),
+                Context.DatabaseApi.GetParameter(ParmChannelId, channelId),
+                Context.DatabaseApi.GetParameter(ParmContentId, contentId)
             };
 
-            return Main.Dao.GetIntResult(sqlString, parms);
+            return Dao.GetIntResult(sqlString, parms);
         }
 
-        public FieldInfo GetFieldInfo(int id, bool isItems)
+        public static FieldInfo GetFieldInfo(int id, bool isItems)
         {
             FieldInfo fieldInfo = null;
 
@@ -327,10 +318,10 @@ WHERE {nameof(FieldInfo.Id)} = @{nameof(FieldInfo.Id)}";
 
             var parms = new []
 			{
-                _helper.GetParameter(ParmId, id)
+                Context.DatabaseApi.GetParameter(ParmId, id)
 			};
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString, parms))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString, parms))
             {
                 if (rdr.Read())
                 {
@@ -341,13 +332,13 @@ WHERE {nameof(FieldInfo.Id)} = @{nameof(FieldInfo.Id)}";
 
             if (fieldInfo != null && isItems)
             {
-                fieldInfo.Items = Main.FieldItemDao.GetItemInfoList(fieldInfo.Id);
+                fieldInfo.Items = FieldItemDao.GetItemInfoList(fieldInfo.Id);
             }
 
             return fieldInfo;
         }
 
-        public FieldInfo GetFieldInfo(int siteId, int channelId, int contentId, string attributeName)
+        public static FieldInfo GetFieldInfo(int siteId, int channelId, int contentId, string attributeName)
         {
             FieldInfo fieldInfo = null;
 
@@ -374,13 +365,13 @@ WHERE
 
             var parms = new []
 			{
-                _helper.GetParameter(ParmSiteId, siteId),
-                _helper.GetParameter(ParmChannelId, channelId),
-                _helper.GetParameter(ParmContentId, contentId),
-                _helper.GetParameter(ParmAttributeName, attributeName)
+                Context.DatabaseApi.GetParameter(ParmSiteId, siteId),
+                Context.DatabaseApi.GetParameter(ParmChannelId, channelId),
+                Context.DatabaseApi.GetParameter(ParmContentId, contentId),
+                Context.DatabaseApi.GetParameter(ParmAttributeName, attributeName)
             };
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString, parms))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString, parms))
             {
                 if (rdr.Read())
                 {
@@ -392,13 +383,13 @@ WHERE
             return fieldInfo;
         }
 
-        private int GetMaxTaxis(int siteId, int channelId, int contentId)
+        private static int GetMaxTaxis(int siteId, int channelId, int contentId)
         {
             string sqlString =
                 $"SELECT MAX(Taxis) AS MaxTaxis FROM {TableName} WHERE {nameof(FieldInfo.SiteId)} = {siteId} AND {nameof(FieldInfo.ChannelId)} = {channelId} AND {nameof(FieldInfo.ContentId)} = {contentId}";
             var maxTaxis = 0;
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString))
             {
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -409,25 +400,25 @@ WHERE
             return maxTaxis;
         }
 
-        public void TaxisDown(int id)
+        public static void TaxisDown(int id)
         {
             var fieldInfo = GetFieldInfo(id, false);
             if (fieldInfo == null) return;
 
-            var sqlString = _helper.GetPageSqlString(TableName, "Id, Taxis", $"WHERE {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND Taxis > (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis", 0, 1);
+            var sqlString = Context.DatabaseApi.GetPageSqlString(TableName, "Id, Taxis", $"WHERE {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND Taxis > (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis", 0, 1);
 
             var higherId = 0;
             var higherTaxis = 0;
 
             var parms = new []
             {
-                _helper.GetParameter(ParmSiteId, fieldInfo.SiteId),
-                _helper.GetParameter(ParmChannelId, fieldInfo.ChannelId),
-                _helper.GetParameter(ParmContentId, fieldInfo.ContentId),
-                _helper.GetParameter(ParmId, id)
+                Context.DatabaseApi.GetParameter(ParmSiteId, fieldInfo.SiteId),
+                Context.DatabaseApi.GetParameter(ParmChannelId, fieldInfo.ChannelId),
+                Context.DatabaseApi.GetParameter(ParmContentId, fieldInfo.ContentId),
+                Context.DatabaseApi.GetParameter(ParmId, id)
             };
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString, parms))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString, parms))
             {
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -444,24 +435,24 @@ WHERE
             }
         }
 
-        public void TaxisUp(int id)
+        public static void TaxisUp(int id)
         {
             var fieldInfo = GetFieldInfo(id, false);
             if (fieldInfo == null) return;
 
-            var sqlString = _helper.GetPageSqlString(TableName, "Id, Taxis", $"WHERE {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND Taxis < (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis DESC", 0, 1);
+            var sqlString = Context.DatabaseApi.GetPageSqlString(TableName, "Id, Taxis", $"WHERE {nameof(FieldInfo.SiteId)} = @{nameof(FieldInfo.SiteId)} AND {nameof(FieldInfo.ChannelId)} = @{nameof(FieldInfo.ChannelId)} AND {nameof(FieldInfo.ContentId)} = @{nameof(FieldInfo.ContentId)} AND Taxis < (SELECT Taxis FROM {TableName} WHERE Id = @Id)", "ORDER BY Taxis DESC", 0, 1);
             var lowerId = 0;
             var lowerTaxis = 0;
 
             var parms = new []
             {
-                _helper.GetParameter(ParmSiteId, fieldInfo.SiteId),
-                _helper.GetParameter(ParmChannelId, fieldInfo.ChannelId),
-                _helper.GetParameter(ParmContentId, fieldInfo.ContentId),
-                _helper.GetParameter(ParmId, id)
+                Context.DatabaseApi.GetParameter(ParmSiteId, fieldInfo.SiteId),
+                Context.DatabaseApi.GetParameter(ParmChannelId, fieldInfo.ChannelId),
+                Context.DatabaseApi.GetParameter(ParmContentId, fieldInfo.ContentId),
+                Context.DatabaseApi.GetParameter(ParmId, id)
             };
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString, parms))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString, parms))
             {
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -478,17 +469,17 @@ WHERE
             }
         }
 
-        private void SetTaxis(int id, int taxis)
+        private static void SetTaxis(int id, int taxis)
         {
             var sqlString = $"UPDATE {TableName} SET Taxis = @Taxis WHERE Id = @Id";
 
             var parms = new []
 			{
-				_helper.GetParameter(ParmTaxis, taxis),
-                _helper.GetParameter(ParmId, id)
+				Context.DatabaseApi.GetParameter(ParmTaxis, taxis),
+                Context.DatabaseApi.GetParameter(ParmId, id)
 			};
 
-            _helper.ExecuteNonQuery(_connectionString, sqlString, parms);
+            Context.DatabaseApi.ExecuteNonQuery(Context.ConnectionString, sqlString, parms);
         }
 
         private static FieldInfo GetFieldInfo(IDataRecord rdr)

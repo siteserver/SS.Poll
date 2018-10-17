@@ -18,23 +18,6 @@ namespace SS.Poll
     {
         public static string PluginId { get; private set; }
 
-        public static Dao Dao { get; }
-        public static PollDao PollDao { get; }
-        public static ItemDao ItemDao { get; }
-        public static LogDao LogDao { get; }
-        public static FieldDao FieldDao { get; }
-        public static FieldItemDao FieldItemDao { get; }
-
-        static Main()
-        {
-            Dao = new Dao(Context.ConnectionString, Context.DatabaseApi);
-            PollDao = new PollDao(Context.ConnectionString, Context.DatabaseApi);
-            ItemDao = new ItemDao(Context.ConnectionString, Context.DatabaseApi);
-            LogDao = new LogDao(Context.ConnectionString, Context.DatabaseApi);
-            FieldDao = new FieldDao(Context.ConnectionString, Context.DatabaseApi);
-            FieldItemDao = new FieldItemDao(Context.ConnectionString, Context.DatabaseApi);
-        }
-
         public override void Startup(IService service)
         {
             PluginId = Id;
@@ -261,7 +244,7 @@ namespace SS.Poll
 
             //        //if (name.ToLower() == "poll")
             //        //{
-            //        //    var pollInfo = Main.PollDao.GetPollInfo(pollId);
+            //        //    var pollInfo = PollDao.GetPollInfo(pollId);
 
             //        //    pollInfo.IsImage = context.GetPostBool("isImage");
             //        //    pollInfo.IsUrl = context.GetPostBool("isUrl");
@@ -274,7 +257,7 @@ namespace SS.Poll
             //        //    pollInfo.IsProfile = context.GetPostBool("isProfile");
             //        //    pollInfo.IsResult = context.GetPostBool("isResult");
 
-            //        //    Main.PollDao.Update(pollInfo);
+            //        //    PollDao.Update(pollInfo);
 
             //        //    return pollInfo;
             //        //}

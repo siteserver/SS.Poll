@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using SS.Poll.Models;
+using SS.Poll.Provider;
 
 namespace SS.Poll.Core
 {
@@ -12,7 +13,7 @@ namespace SS.Poll.Core
             var list = CacheUtils.Get<List<FieldInfo>>(cacheKey);
             if (list != null) return list;
 
-            list = Main.FieldDao.GetFieldInfoList(siteId, channelId, contentId, true);
+            list = FieldDao.GetFieldInfoList(siteId, channelId, contentId, true);
             CacheUtils.Insert(cacheKey, list);
             return list;
         }

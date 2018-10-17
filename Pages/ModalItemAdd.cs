@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.UI.WebControls;
 using SS.Poll.Core;
 using SS.Poll.Models;
+using SS.Poll.Provider;
 
 namespace SS.Poll.Pages
 {
@@ -43,7 +44,7 @@ namespace SS.Poll.Pages
 
             if (IsPostBack) return;
 
-            var itemInfo = _itemId > 0 ? Main.ItemDao.GetItemInfo(_itemId) : new ItemInfo();
+            var itemInfo = _itemId > 0 ? ItemDao.GetItemInfo(_itemId) : new ItemInfo();
 
             TbTitle.Text = itemInfo.Title;
             TbSubTitle.Text = itemInfo.SubTitle;
@@ -121,7 +122,7 @@ namespace SS.Poll.Pages
         {
             var isChanged = false;
 
-            var itemInfo = Main.ItemDao.GetItemInfo(itemId);
+            var itemInfo = ItemDao.GetItemInfo(itemId);
 
             itemInfo.Title = TbTitle.Text;
             itemInfo.SubTitle = TbSubTitle.Text;
@@ -131,7 +132,7 @@ namespace SS.Poll.Pages
 
             try
             {
-                Main.ItemDao.Update(itemInfo);
+                ItemDao.Update(itemInfo);
                 isChanged = true;
             }
             catch (Exception ex)
@@ -160,7 +161,7 @@ namespace SS.Poll.Pages
 
             try
             {
-                Main.ItemDao.Insert(itemInfo);
+                ItemDao.Insert(itemInfo);
                 isChanged = true;
             }
             catch (Exception ex)

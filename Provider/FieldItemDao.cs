@@ -5,7 +5,7 @@ using SS.Poll.Models;
 
 namespace SS.Poll.Provider
 {
-    public class FieldItemDao
+    public static class FieldItemDao
     {
         public const string TableName = "ss_poll_field_item";
 
@@ -34,20 +34,11 @@ namespace SS.Poll.Provider
             }
         };
 
-        private readonly string _connectionString;
-        private readonly IDatabaseApi _helper;
-
-        public FieldItemDao(string connectionString, IDatabaseApi dataApi)
-        {
-            _connectionString = connectionString;
-            _helper = dataApi;
-        }
-
         private const string ParmFieldId = "@FieldId";
         private const string ParmValue = "@Value";
         private const string ParmIsSelected = "@IsSelected";
 
-        public void Insert(IDbTransaction trans, FieldItemInfo itemInfo)
+        public static void Insert(IDbTransaction trans, FieldItemInfo itemInfo)
         {
             var sqlString = $@"INSERT INTO {TableName} (
     {nameof(FieldItemInfo.FieldId)},
@@ -61,19 +52,19 @@ namespace SS.Poll.Provider
 
             var insertItemParms = new[]
             {
-                _helper.GetParameter(ParmFieldId, itemInfo.FieldId),
-                _helper.GetParameter(ParmValue, itemInfo.Value),
-                _helper.GetParameter(ParmIsSelected, itemInfo.IsSelected)
+                Context.DatabaseApi.GetParameter(ParmFieldId, itemInfo.FieldId),
+                Context.DatabaseApi.GetParameter(ParmValue, itemInfo.Value),
+                Context.DatabaseApi.GetParameter(ParmIsSelected, itemInfo.IsSelected)
             };
 
-            _helper.ExecuteNonQuery(trans, sqlString, insertItemParms);
+            Context.DatabaseApi.ExecuteNonQuery(trans, sqlString, insertItemParms);
         }
 
-        public void InsertItems(List<FieldItemInfo> items)
+        public static void InsertItems(List<FieldItemInfo> items)
         {
             if (items == null || items.Count == 0) return;
             
-            using (var conn = _helper.GetConnection(_connectionString))
+            using (var conn = Context.DatabaseApi.GetConnection(Context.ConnectionString))
             {
                 conn.Open();
                 using (var trans = conn.BeginTransaction())
@@ -96,19 +87,19 @@ namespace SS.Poll.Provider
             }
         }
 
-        public void DeleteItems(int fieldId)
+        public static void DeleteItems(int fieldId)
         {
             var sqlString = $"DELETE FROM {TableName} WHERE {nameof(FieldItemInfo.FieldId)} = @{nameof(FieldItemInfo.FieldId)}";
 
             var parms = new []
 			{
-				_helper.GetParameter(ParmFieldId, fieldId)
+				Context.DatabaseApi.GetParameter(ParmFieldId, fieldId)
 			};
 
-            _helper.ExecuteNonQuery(_connectionString, sqlString, parms);
+            Context.DatabaseApi.ExecuteNonQuery(Context.ConnectionString, sqlString, parms);
         }
 
-        public List<FieldItemInfo> GetItemInfoList(int fieldId)
+        public static List<FieldItemInfo> GetItemInfoList(int fieldId)
         {
             var items = new List<FieldItemInfo>();
 
@@ -117,10 +108,10 @@ namespace SS.Poll.Provider
 
             var parms = new []
 			{
-                _helper.GetParameter(ParmFieldId, fieldId)
+                Context.DatabaseApi.GetParameter(ParmFieldId, fieldId)
 			};
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString, parms))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString, parms))
             {
                 while (rdr.Read())
                 {

@@ -5,6 +5,7 @@ using System.Text;
 using SiteServer.Plugin;
 using SS.Poll.Core;
 using SS.Poll.Models;
+using SS.Poll.Provider;
 
 namespace SS.Poll.Parse
 {
@@ -15,7 +16,7 @@ namespace SS.Poll.Parse
         public static object ApiSubmit(IRequest request, string id)
         {
             var pollId = Convert.ToInt32(id);
-            var pollInfo = Main.PollDao.GetPollInfo(pollId);
+            var pollInfo = PollDao.GetPollInfo(pollId);
             if (pollInfo == null) return null;
 
             if (pollInfo.IsProfile)
@@ -54,7 +55,7 @@ namespace SS.Poll.Parse
 
                 var attributes = request.GetPostObject<Dictionary<string, string>>("attributes");
 
-                var fieldInfoList = Main.FieldDao.GetFieldInfoList(pollInfo.SiteId, pollInfo.ChannelId, pollInfo.ContentId, false);
+                var fieldInfoList = FieldDao.GetFieldInfoList(pollInfo.SiteId, pollInfo.ChannelId, pollInfo.ContentId, false);
                 foreach (var fieldInfo in fieldInfoList)
                 {
                     string value;
@@ -62,13 +63,13 @@ namespace SS.Poll.Parse
                     logInfo.Set(fieldInfo.AttributeName, value);
                 }
 
-                Main.LogDao.Insert(logInfo);
+                LogDao.Insert(logInfo);
             }
 
-            Main.ItemDao.AddCount(pollInfo.SiteId, pollInfo.ChannelId, pollInfo.ContentId, itemIds);
+            ItemDao.AddCount(pollInfo.SiteId, pollInfo.ChannelId, pollInfo.ContentId, itemIds);
 
             int totalCount;
-            var itemInfoList = Main.ItemDao.GetItemInfoList(pollInfo.SiteId, pollInfo.ChannelId, pollInfo.ContentId, out totalCount);
+            var itemInfoList = ItemDao.GetItemInfoList(pollInfo.SiteId, pollInfo.ChannelId, pollInfo.ContentId, out totalCount);
             var items = new List<object>();
             foreach (var itemInfo in itemInfoList)
             {
@@ -102,10 +103,10 @@ namespace SS.Poll.Parse
         {
             if (context.SiteId <= 0 || context.ChannelId <= 0 || context.ContentId <= 0) return string.Empty;
 
-            var pollInfo = Main.PollDao.GetPollInfo(context.SiteId, context.ChannelId, context.ContentId);
+            var pollInfo = PollDao.GetPollInfo(context.SiteId, context.ChannelId, context.ContentId);
             if (pollInfo == null) return string.Empty;
 
-            var items = Main.ItemDao.GetItemInfoList(context.SiteId, context.ChannelId, context.ContentId);
+            var items = ItemDao.GetItemInfoList(context.SiteId, context.ChannelId, context.ContentId);
             if (items == null || items.Count == 0) return string.Empty;
 
             var itemBuilder = new StringBuilder();
@@ -183,7 +184,7 @@ namespace SS.Poll.Parse
             var submitHtml = string.Empty;
             if (pollInfo.IsProfile)
             {
-                var fieldInfoList = Main.FieldDao.GetFieldInfoList(context.SiteId, context.ChannelId, context.ContentId, true);
+                var fieldInfoList = FieldDao.GetFieldInfoList(context.SiteId, context.ChannelId, context.ContentId, true);
                 var builder = new StringBuilder();
 
                 foreach (var fieldInfo in fieldInfoList)

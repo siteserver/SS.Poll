@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.UI.WebControls;
 using SS.Poll.Core;
 using SS.Poll.Models;
+using SS.Poll.Provider;
 
 namespace SS.Poll.Pages
 {
@@ -30,7 +31,7 @@ namespace SS.Poll.Pages
             if (!string.IsNullOrEmpty(Request.QueryString["delete"]))
             {
                 var itemId = Convert.ToInt32(Request.QueryString["itemId"]);
-                Main.ItemDao.Delete(itemId);
+                ItemDao.Delete(itemId);
                 LtlMessage.Text = Utils.GetMessageHtml("投票项删除成功！", true);
             }
             if (!string.IsNullOrEmpty(Request.QueryString["taxis"]))
@@ -41,16 +42,16 @@ namespace SS.Poll.Pages
                 switch (direction.ToUpper())
                 {
                     case "UP":
-                        Main.ItemDao.TaxisUp(itemId);
+                        ItemDao.TaxisUp(itemId);
                         break;
                     case "DOWN":
-                        Main.ItemDao.TaxisDown(itemId);
+                        ItemDao.TaxisDown(itemId);
                         break;
                 }
                 LtlMessage.Text = Utils.GetMessageHtml("排序成功！", true);
             }
 
-            var itemList = Main.ItemDao.GetItemInfoList(SiteId, ChannelId, ContentId);
+            var itemList = ItemDao.GetItemInfoList(SiteId, ChannelId, ContentId);
 
             DgContents.DataSource = itemList;
             DgContents.ItemDataBound += DgContents_ItemDataBound;

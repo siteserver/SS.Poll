@@ -6,7 +6,7 @@ using SS.Poll.Models;
 
 namespace SS.Poll.Provider
 {
-    public class LogDao
+    public static class LogDao
     {
         public const string TableName = "ss_poll_log";
 
@@ -56,16 +56,7 @@ namespace SS.Poll.Provider
             }
         };
 
-        private readonly string _connectionString;
-        private readonly IDatabaseApi _helper;
-
-        public LogDao(string connectionString, IDatabaseApi dataApi)
-        {
-            _connectionString = connectionString;
-            _helper = dataApi;
-        }
-
-        public void Insert(LogInfo logInfo)
+        public static void Insert(LogInfo logInfo)
         {
             string sqlString = $@"INSERT INTO {TableName}
 (
@@ -88,42 +79,42 @@ namespace SS.Poll.Provider
 
             var parameters = new List<IDataParameter>
             {
-                _helper.GetParameter(nameof(logInfo.SiteId), logInfo.SiteId),
-                _helper.GetParameter(nameof(logInfo.ChannelId), logInfo.ChannelId),
-                _helper.GetParameter(nameof(logInfo.ContentId), logInfo.ContentId),
-                _helper.GetParameter(nameof(logInfo.ItemIds), logInfo.ItemIds),
-                _helper.GetParameter(nameof(logInfo.UniqueId), logInfo.UniqueId),
-                _helper.GetParameter(nameof(logInfo.AddDate), logInfo.AddDate),
-                _helper.GetParameter(nameof(logInfo.AttributeValues), logInfo.ToString())
+                Context.DatabaseApi.GetParameter(nameof(logInfo.SiteId), logInfo.SiteId),
+                Context.DatabaseApi.GetParameter(nameof(logInfo.ChannelId), logInfo.ChannelId),
+                Context.DatabaseApi.GetParameter(nameof(logInfo.ContentId), logInfo.ContentId),
+                Context.DatabaseApi.GetParameter(nameof(logInfo.ItemIds), logInfo.ItemIds),
+                Context.DatabaseApi.GetParameter(nameof(logInfo.UniqueId), logInfo.UniqueId),
+                Context.DatabaseApi.GetParameter(nameof(logInfo.AddDate), logInfo.AddDate),
+                Context.DatabaseApi.GetParameter(nameof(logInfo.AttributeValues), logInfo.ToString())
             };
 
-            _helper.ExecuteNonQuery(_connectionString, sqlString, parameters.ToArray());
+            Context.DatabaseApi.ExecuteNonQuery(Context.ConnectionString, sqlString, parameters.ToArray());
         }
 
-        public void DeleteAll(int siteId, int channelId, int contentId)
+        public static void DeleteAll(int siteId, int channelId, int contentId)
         {
             if (siteId <= 0 || channelId <= 0 || contentId <= 0) return;
 
             string sqlString = $"DELETE FROM {TableName} WHERE {nameof(LogInfo.SiteId)} = {siteId} AND {nameof(LogInfo.ChannelId)} = {channelId} AND {nameof(LogInfo.ContentId)} = {contentId}";
-            _helper.ExecuteNonQuery(_connectionString, sqlString);
+            Context.DatabaseApi.ExecuteNonQuery(Context.ConnectionString, sqlString);
         }
 
-        public void Delete(List<int> logIdList)
+        public static void Delete(List<int> logIdList)
         {
             if (logIdList == null || logIdList.Count <= 0) return;
             string sqlString =
                 $"DELETE FROM {TableName} WHERE {nameof(LogInfo.Id)} IN ({string.Join(",", logIdList)})";
-            _helper.ExecuteNonQuery(_connectionString, sqlString);
+            Context.DatabaseApi.ExecuteNonQuery(Context.ConnectionString, sqlString);
         }
 
-        public int GetCount(int siteId, int channelId, int contentId)
+        public static int GetCount(int siteId, int channelId, int contentId)
         {
             string sqlString =
                 $"SELECT COUNT(*) FROM {TableName} WHERE {nameof(LogInfo.SiteId)} = {siteId} AND {nameof(LogInfo.ChannelId)} = {channelId} AND {nameof(LogInfo.ContentId)} = {contentId}";
 
             var count = 0;
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString))
             {
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -135,19 +126,19 @@ namespace SS.Poll.Provider
             return count;
         }
 
-        public bool IsExists(int siteId, int channelId, int contentId, string uniqueId)
+        public static bool IsExists(int siteId, int channelId, int contentId, string uniqueId)
         {
             var sqlString =
                 $"SELECT Id FROM {TableName} WHERE {nameof(LogInfo.SiteId)} = {siteId} AND {nameof(LogInfo.ChannelId)} = {channelId} AND {nameof(LogInfo.ContentId)} = {contentId} AND {nameof(LogInfo.UniqueId)} = @{nameof(LogInfo.UniqueId)}";
 
             var parameters = new List<IDataParameter>
             {
-                _helper.GetParameter(nameof(LogInfo.UniqueId), uniqueId)
+                Context.DatabaseApi.GetParameter(nameof(LogInfo.UniqueId), uniqueId)
             };
 
             var exists = false;
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString, parameters.ToArray()))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString, parameters.ToArray()))
             {
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -159,7 +150,7 @@ namespace SS.Poll.Provider
             return exists;
         }
 
-        public List<LogInfo> GetPollLogInfoList(int siteId, int channelId, int contentId, int totalCount, int limit, int offset)
+        public static List<LogInfo> GetPollLogInfoList(int siteId, int channelId, int contentId, int totalCount, int limit, int offset)
         {
             var pollLogInfoList = new List<LogInfo>();
 
@@ -174,7 +165,7 @@ namespace SS.Poll.Provider
     {nameof(LogInfo.AttributeValues)}
             FROM {TableName} WHERE {nameof(LogInfo.SiteId)} = {siteId} AND {nameof(LogInfo.ChannelId)} = {channelId} AND {nameof(LogInfo.ContentId)} = {contentId}";
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString))
             {
                 while (rdr.Read())
                 {
@@ -190,7 +181,7 @@ namespace SS.Poll.Provider
             return pollLogInfoList;
         }
 
-        public List<LogInfo> GetAllPollLogInfoList(int siteId, int channelId, int contentId)
+        public static List<LogInfo> GetAllPollLogInfoList(int siteId, int channelId, int contentId)
         {
             var pollLogInfoList = new List<LogInfo>();
 
@@ -205,7 +196,7 @@ namespace SS.Poll.Provider
     {nameof(LogInfo.AttributeValues)}
             FROM {TableName} WHERE {nameof(LogInfo.SiteId)} = {siteId} AND {nameof(LogInfo.ChannelId)} = {channelId} AND {nameof(LogInfo.ContentId)} = {contentId}";
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString))
             {
                 while (rdr.Read())
                 {

@@ -2,6 +2,7 @@
 using System.Web;
 using System.Web.UI;
 using SS.Poll.Models;
+using SS.Poll.Provider;
 
 namespace SS.Poll.Pages
 {
@@ -39,7 +40,7 @@ namespace SS.Poll.Pages
                 Response.End();
             }
 
-            PollInfo = Main.PollDao.GetPollInfo(SiteId, ChannelId, ContentId);
+            PollInfo = PollDao.GetPollInfo(SiteId, ChannelId, ContentId);
             if (PollInfo != null) return;
 
             PollInfo = new PollInfo
@@ -52,7 +53,7 @@ namespace SS.Poll.Pages
                 IsTimeout = false,
                 IsCheckbox = true
             };
-            PollInfo.Id = Main.PollDao.Insert(PollInfo);
+            PollInfo.Id = PollDao.Insert(PollInfo);
         }
     }
 }

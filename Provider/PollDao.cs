@@ -6,7 +6,7 @@ using SS.Poll.Models;
 
 namespace SS.Poll.Provider
 {
-    public class PollDao
+    public static class PollDao
     {
         public const string TableName = "ss_poll";
 
@@ -84,16 +84,7 @@ namespace SS.Poll.Provider
             },
         };
 
-        private readonly string _connectionString;
-        private readonly IDatabaseApi _helper;
-
-        public PollDao(string connectionString, IDatabaseApi dataApi)
-        {
-            _connectionString = connectionString;
-            _helper = dataApi;
-        }
-
-        public int Insert(PollInfo pollInfo)
+        public static int Insert(PollInfo pollInfo)
         {
             int pollId;
 
@@ -128,29 +119,29 @@ namespace SS.Poll.Provider
 
             var parameters = new List<IDataParameter>
             {
-                _helper.GetParameter(nameof(pollInfo.SiteId), pollInfo.SiteId),
-                _helper.GetParameter(nameof(pollInfo.ChannelId), pollInfo.ChannelId),
-                _helper.GetParameter(nameof(pollInfo.ContentId), pollInfo.ContentId),
-                _helper.GetParameter(nameof(pollInfo.IsImage), pollInfo.IsImage),
-                _helper.GetParameter(nameof(pollInfo.IsUrl), pollInfo.IsUrl),
-                _helper.GetParameter(nameof(pollInfo.IsResult), pollInfo.IsResult),
-                _helper.GetParameter(nameof(pollInfo.IsTimeout), pollInfo.IsTimeout),
-                _helper.GetParameter(nameof(pollInfo.TimeToStart), pollInfo.TimeToStart),
-                _helper.GetParameter(nameof(pollInfo.TimeToEnd), pollInfo.TimeToEnd),
-                _helper.GetParameter(nameof(pollInfo.IsCheckbox), pollInfo.IsCheckbox),
-                _helper.GetParameter(nameof(pollInfo.CheckboxMin), pollInfo.CheckboxMin),
-                _helper.GetParameter(nameof(pollInfo.CheckboxMax), pollInfo.CheckboxMax),
-                _helper.GetParameter(nameof(pollInfo.IsProfile), pollInfo.IsProfile)
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.SiteId), pollInfo.SiteId),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.ChannelId), pollInfo.ChannelId),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.ContentId), pollInfo.ContentId),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.IsImage), pollInfo.IsImage),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.IsUrl), pollInfo.IsUrl),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.IsResult), pollInfo.IsResult),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.IsTimeout), pollInfo.IsTimeout),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.TimeToStart), pollInfo.TimeToStart),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.TimeToEnd), pollInfo.TimeToEnd),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.IsCheckbox), pollInfo.IsCheckbox),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.CheckboxMin), pollInfo.CheckboxMin),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.CheckboxMax), pollInfo.CheckboxMax),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.IsProfile), pollInfo.IsProfile)
             };
 
-            using (var conn = _helper.GetConnection(_connectionString))
+            using (var conn = Context.DatabaseApi.GetConnection(Context.ConnectionString))
             {
                 conn.Open();
                 using (var trans = conn.BeginTransaction())
                 {
                     try
                     {
-                        pollId = _helper.ExecuteNonQueryAndReturnId(TableName, nameof(PollInfo.Id), trans, sqlString, parameters.ToArray());
+                        pollId = Context.DatabaseApi.ExecuteNonQueryAndReturnId(TableName, nameof(PollInfo.Id), trans, sqlString, parameters.ToArray());
 
                         trans.Commit();
                     }
@@ -165,7 +156,7 @@ namespace SS.Poll.Provider
             return pollId;
         }
 
-        public void Update(PollInfo pollInfo)
+        public static void Update(PollInfo pollInfo)
         {
             string sqlString = $@"UPDATE {TableName} SET
                 {nameof(PollInfo.SiteId)} = @{nameof(PollInfo.SiteId)}, 
@@ -185,26 +176,26 @@ namespace SS.Poll.Provider
 
             var parameters = new List<IDataParameter>
             {
-                _helper.GetParameter(nameof(pollInfo.SiteId), pollInfo.SiteId),
-                _helper.GetParameter(nameof(pollInfo.ChannelId), pollInfo.ChannelId),
-                _helper.GetParameter(nameof(pollInfo.ContentId), pollInfo.ContentId),
-                _helper.GetParameter(nameof(pollInfo.IsImage), pollInfo.IsImage),
-                _helper.GetParameter(nameof(pollInfo.IsUrl), pollInfo.IsUrl),
-                _helper.GetParameter(nameof(pollInfo.IsResult), pollInfo.IsResult),
-                _helper.GetParameter(nameof(pollInfo.IsTimeout), pollInfo.IsTimeout),
-                _helper.GetParameter(nameof(pollInfo.TimeToStart), pollInfo.TimeToStart),
-                _helper.GetParameter(nameof(pollInfo.TimeToEnd), pollInfo.TimeToEnd),
-                _helper.GetParameter(nameof(pollInfo.IsCheckbox), pollInfo.IsCheckbox),
-                _helper.GetParameter(nameof(pollInfo.CheckboxMin), pollInfo.CheckboxMin),
-                _helper.GetParameter(nameof(pollInfo.CheckboxMax), pollInfo.CheckboxMax),
-                _helper.GetParameter(nameof(pollInfo.IsProfile), pollInfo.IsProfile),
-                _helper.GetParameter(nameof(pollInfo.Id), pollInfo.Id)
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.SiteId), pollInfo.SiteId),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.ChannelId), pollInfo.ChannelId),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.ContentId), pollInfo.ContentId),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.IsImage), pollInfo.IsImage),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.IsUrl), pollInfo.IsUrl),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.IsResult), pollInfo.IsResult),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.IsTimeout), pollInfo.IsTimeout),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.TimeToStart), pollInfo.TimeToStart),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.TimeToEnd), pollInfo.TimeToEnd),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.IsCheckbox), pollInfo.IsCheckbox),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.CheckboxMin), pollInfo.CheckboxMin),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.CheckboxMax), pollInfo.CheckboxMax),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.IsProfile), pollInfo.IsProfile),
+                Context.DatabaseApi.GetParameter(nameof(pollInfo.Id), pollInfo.Id)
             };
 
-            _helper.ExecuteNonQuery(_connectionString, sqlString, parameters.ToArray());
+            Context.DatabaseApi.ExecuteNonQuery(Context.ConnectionString, sqlString, parameters.ToArray());
         }
 
-        public void Delete(int siteId, int channelId, int contentId)
+        public static void Delete(int siteId, int channelId, int contentId)
         {
             if (siteId <= 0 || channelId <= 0 || contentId <= 0) return;
 
@@ -212,10 +203,10 @@ namespace SS.Poll.Provider
             //DataProviderWx.PollItemDao.DeleteAll(siteId, pollId);
 
             string sqlString = $"DELETE FROM {TableName} WHERE {nameof(PollInfo.SiteId)} = {siteId} AND {nameof(PollInfo.ChannelId)} = {channelId} AND {nameof(PollInfo.ContentId)} = {contentId}";
-            _helper.ExecuteNonQuery(_connectionString, sqlString);
+            Context.DatabaseApi.ExecuteNonQuery(Context.ConnectionString, sqlString);
         }
 
-        //public void Delete(int siteId, List<int> pollIdList)
+        //public static void Delete(int siteId, List<int> pollIdList)
         //{
         //    if (pollIdList == null || pollIdList.Count <= 0) return;
 
@@ -227,10 +218,10 @@ namespace SS.Poll.Provider
 
         //    string sqlString =
         //        $"DELETE FROM {TableName} WHERE {nameof(PollInfo.Id)} IN ({string.Join(",", pollIdList)})";
-        //    _helper.ExecuteNonQuery(_connectionString, sqlString);
+        //    Context.DatabaseApi.ExecuteNonQuery(Context.ConnectionString, sqlString);
         //}
 
-        public PollInfo GetPollInfo(int siteId, int channelId, int contentId)
+        public static PollInfo GetPollInfo(int siteId, int channelId, int contentId)
         {
             PollInfo pollInfo = null;
 
@@ -250,7 +241,7 @@ namespace SS.Poll.Provider
             {nameof(PollInfo.IsProfile)}
             FROM {TableName} WHERE {nameof(PollInfo.SiteId)} = {siteId} AND {nameof(PollInfo.ChannelId)} = {channelId} AND {nameof(PollInfo.ContentId)} = {contentId}";
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString))
             {
                 if (rdr.Read())
                 {
@@ -262,7 +253,7 @@ namespace SS.Poll.Provider
             return pollInfo;
         }
 
-        public PollInfo GetPollInfo(int id)
+        public static PollInfo GetPollInfo(int id)
         {
             PollInfo pollInfo = null;
 
@@ -282,7 +273,7 @@ namespace SS.Poll.Provider
             {nameof(PollInfo.IsProfile)}
             FROM {TableName} WHERE {nameof(PollInfo.Id)} = {id}";
 
-            using (var rdr = _helper.ExecuteReader(_connectionString, sqlString))
+            using (var rdr = Context.DatabaseApi.ExecuteReader(Context.ConnectionString, sqlString))
             {
                 if (rdr.Read())
                 {
@@ -331,6 +322,5 @@ namespace SS.Poll.Provider
 
             return pollInfo;
         }
-
     }
 }

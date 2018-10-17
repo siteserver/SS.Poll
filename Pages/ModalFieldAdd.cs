@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.UI.WebControls;
 using SS.Poll.Core;
 using SS.Poll.Models;
+using SS.Poll.Provider;
 
 namespace SS.Poll.Pages
 {
@@ -37,7 +38,7 @@ namespace SS.Poll.Pages
 
             if (IsPostBack) return;
 
-            var fieldInfo = _fieldId > 0 ? Main.FieldDao.GetFieldInfo(_fieldId, true) : new FieldInfo();
+            var fieldInfo = _fieldId > 0 ? FieldDao.GetFieldInfo(_fieldId, true) : new FieldInfo();
 
             FieldTypeUtils.AddListItems(DdlFieldType);
 
@@ -115,7 +116,7 @@ namespace SS.Poll.Pages
                 List<FieldItemInfo> items = null;
                 if (fieldId > 0)
                 {
-                    items = Main.FieldItemDao.GetItemInfoList(fieldId);
+                    items = FieldItemDao.GetItemInfoList(fieldId);
                 }
                 RptItems.DataSource = FieldManager.GetFieldItemDataSet(count, items);
                 RptItems.DataBind();
@@ -158,10 +159,10 @@ namespace SS.Poll.Pages
         {
             var isChanged = false;
 
-            var fieldInfo = Main.FieldDao.GetFieldInfo(fieldId, true);
+            var fieldInfo = FieldDao.GetFieldInfo(fieldId, true);
 
             if (fieldInfo.AttributeName != TbAttributeName.Text &&
-                Main.FieldDao.IsExists(SiteId, ChannelId, ContentId, TbAttributeName.Text))
+                FieldDao.IsExists(SiteId, ChannelId, ContentId, TbAttributeName.Text))
             {
                 LtlMessage.Text = Utils.GetMessageHtml($@"字段修改失败：字段名""{TbAttributeName.Text}""已存在", false);
                 return false;
@@ -227,9 +228,9 @@ namespace SS.Poll.Pages
 
             try
             {
-                Main.FieldDao.Update(fieldInfo);
-                Main.FieldItemDao.DeleteItems(fieldId);
-                Main.FieldItemDao.InsertItems(fieldItems);
+                FieldDao.Update(fieldInfo);
+                FieldItemDao.DeleteItems(fieldId);
+                FieldItemDao.InsertItems(fieldItems);
                 isChanged = true;
             }
             catch (Exception ex)
@@ -243,7 +244,7 @@ namespace SS.Poll.Pages
         {
             var isChanged = false;
 
-            if (Main.FieldDao.IsExists(SiteId, ChannelId, ContentId, TbAttributeName.Text))
+            if (FieldDao.IsExists(SiteId, ChannelId, ContentId, TbAttributeName.Text))
             {
                 LtlMessage.Text = Utils.GetMessageHtml($@"字段添加失败：字段名""{TbAttributeName.Text}""已存在", false);
                 return false;
@@ -315,7 +316,7 @@ namespace SS.Poll.Pages
 
             try
             {
-                Main.FieldDao.Insert(fieldInfo);
+                FieldDao.Insert(fieldInfo);
                 isChanged = true;
             }
             catch (Exception ex)

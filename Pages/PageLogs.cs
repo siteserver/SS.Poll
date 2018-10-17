@@ -4,6 +4,7 @@ using System.Web.UI.WebControls;
 using SS.Poll.Core;
 using System.Collections.Generic;
 using SS.Poll.Models;
+using SS.Poll.Provider;
 
 namespace SS.Poll.Pages
 {
@@ -25,7 +26,7 @@ namespace SS.Poll.Pages
 
         public void Page_Load(object sender, EventArgs e)
         {
-            _fieldInfoList = Main.FieldDao.GetFieldInfoList(SiteId, ChannelId, ContentId, false);
+            _fieldInfoList = FieldDao.GetFieldInfoList(SiteId, ChannelId, ContentId, false);
 
             if (IsPostBack) return;
 
@@ -34,8 +35,8 @@ namespace SS.Poll.Pages
                 LtlFieldNames.Text += $@"<th scope=""col"">{fieldInfo.DisplayName}</th>";
             }
 
-            var totalCount = Main.LogDao.GetCount(SiteId, ChannelId, ContentId);
-            var logs = Main.LogDao.GetPollLogInfoList(SiteId, ChannelId, ContentId, totalCount, 30, 0);
+            var totalCount = LogDao.GetCount(SiteId, ChannelId, ContentId);
+            var logs = LogDao.GetPollLogInfoList(SiteId, ChannelId, ContentId, totalCount, 30, 0);
 
             RptLogs.DataSource = logs;
             RptLogs.ItemDataBound += RptLogs_ItemDataBound;
@@ -44,7 +45,7 @@ namespace SS.Poll.Pages
 
         public void BtnExport_Click(object sender, EventArgs e)
         {
-            var logs = Main.LogDao.GetAllPollLogInfoList(SiteId, ChannelId, ContentId);
+            var logs = LogDao.GetAllPollLogInfoList(SiteId, ChannelId, ContentId);
 
             var head = new List<string> { "序号"};
             foreach (var fieldInfo in _fieldInfoList)
