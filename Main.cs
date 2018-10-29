@@ -23,7 +23,7 @@ namespace SS.Poll
             PluginId = Id;
 
             service
-                .AddContentMenu(new Menu
+                .AddContentMenu(contentInfo => new Menu
                 {
                     Text = "投票管理",
                     Href = $"{nameof(PageItems)}.aspx"

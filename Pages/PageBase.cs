@@ -29,12 +29,13 @@ namespace SS.Poll.Pages
         {
             base.OnInit(e);
 
-            SiteId = Convert.ToInt32(Request.QueryString["siteId"]);
-            ChannelId = Convert.ToInt32(Request.QueryString["channelId"]);
-            ContentId = Convert.ToInt32(Request.QueryString["contentId"]);
-            ReturnUrl = HttpUtility.UrlDecode(Request.QueryString["returnUrl"]);
+            var request = SiteServer.Plugin.Context.GetCurrentRequest();
+            SiteId = request.GetQueryInt("siteId");
+            ChannelId = request.GetQueryInt("channelId");
+            ContentId = request.GetQueryInt("contentId");
+            ReturnUrl = HttpUtility.UrlDecode(request.GetQueryString("returnUrl"));
 
-            if (!SiteServer.Plugin.Context.Request.AdminPermissions.HasSitePermissions(SiteId, Main.PluginId))
+            if (!request.AdminPermissions.HasSitePermissions(SiteId, Main.PluginId))
             {
                 Response.Write("<h1>未授权访问</h1>");
                 Response.End();
