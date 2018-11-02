@@ -14,7 +14,9 @@ namespace SS.Poll.Provider
             new TableColumn
             {
                 AttributeName = nameof(FieldItemInfo.Id),
-                DataType = DataType.Integer
+                DataType = DataType.Integer,
+                IsPrimaryKey = true,
+                IsIdentity = true
             },
             new TableColumn
             {
