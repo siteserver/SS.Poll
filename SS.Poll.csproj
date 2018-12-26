@@ -148,14 +148,22 @@
     <Content Include="assets\layer\skin\layer.ext.css" />
     <Content Include="css\base.css" />
     <Content Include="logo.svg" />
-    <Content Include="modalFieldAdd.aspx" />
-    <Content Include="modalFieldValidate.aspx" />
+    <Content Include="modalFieldAdd.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="modalFieldValidate.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="modalItemAdd.aspx" />
     <Content Include="pageFields.aspx" />
-    <Content Include="pageItems.aspx" />
+    <Content Include="pageItems.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="pageLogs.aspx" />
     <Content Include="pageResults.aspx" />
-    <Content Include="pageSettings.aspx" />
+    <Content Include="pageSettings.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -29,5 +29,12 @@ namespace SS.Poll.Models
 	    public string FieldSettings { get; set; }
 
 	    public List<FieldItemInfo> Items { get; set; } = new List<FieldItemInfo>();
-	}
+
+
+        public bool IsNumLimit { get; set; }
+
+        public int NumMin { get; set; }
+        public int NumMax { get; set; }
+
+    }
 }
