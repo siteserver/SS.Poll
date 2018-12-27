@@ -73,32 +73,6 @@
           </div>
         </div>
 
-        <div class="form-group row">
-        <label class="col-2 col-form-label">选择数量选项</label>
-
-                     <div class="col-10">
-                <div class="checkbox checkbox-primary">
-                  <asp:CheckBox ID="CbIsNumLimit" text="是否启用选择数量限制" runat="server"></asp:CheckBox>
-        
-                </div>
-              </div>
-        </div>
-
-            <div class="form-inline form-group">
-                <label class="mr-sm-2 ml-sm-2" for="maxNum">
-                  最少选择
-                  <asp:RequiredFieldValidator ControlToValidate="TbCheckboxMin" errorMessage=" *" foreColor="red" display="Dynamic" runat="server"
-                  />
-                </label>
-                <asp:TextBox ID="TbCheckboxMin" class="form-control" runat="server"></asp:TextBox>
-                <label class="mr-sm-2 ml-sm-2" for="checkboxMax">
-                  最多选择
-                  <asp:RequiredFieldValidator ControlToValidate="TbCheckboxMax" errorMessage=" *" foreColor="red" display="Dynamic" runat="server"
-                  />
-                </label>
-                <asp:TextBox ID="TbCheckboxMax" class="form-control" runat="server"></asp:TextBox>
-              </div>
-
         <asp:PlaceHolder ID="PhItemCount" runat="server">
           <div class="form-group row">
             <label class="col-2 col-form-label">
