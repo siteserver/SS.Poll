@@ -52,7 +52,9 @@ namespace SS.Poll.Pages
                 IsImage = true,
                 IsUrl = false,
                 IsTimeout = false,
-                IsCheckbox = true
+                IsCheckbox = true,
+                TimeToStart=DateTime.Now,
+                TimeToEnd=DateTime.Now
             };
             PollInfo.Id = PollDao.Insert(PollInfo);
         }

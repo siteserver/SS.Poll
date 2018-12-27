@@ -29,5 +29,7 @@ namespace SS.Poll.Models
 	    public string FieldSettings { get; set; }
 
 	    public List<FieldItemInfo> Items { get; set; } = new List<FieldItemInfo>();
-	}
+
+
+    }
 }

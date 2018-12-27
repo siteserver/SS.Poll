@@ -126,7 +126,7 @@
               <label class="col-2 control-label">投票界面选项</label>
               <div class="col-10">
                 <div class="checkbox checkbox-primary">
-                  <asp:CheckBox ID="CbIsProfile" text="需要提交投票者信息" runat="server"></asp:CheckBox>
+                  <asp:CheckBox ID="CbIsProfile"  text="需要提交投票者信息" runat="server"></asp:CheckBox>
                   <asp:CheckBox ID="CbIsResult" style="margin-left: 30px;" text="投票结束后显示结果" runat="server"></asp:CheckBox>
                 </div>
               </div>

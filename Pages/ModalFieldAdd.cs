@@ -316,7 +316,13 @@ namespace SS.Poll.Pages
 
             try
             {
-                FieldDao.Insert(fieldInfo);
+              int fieldId=  FieldDao.Insert(fieldInfo);
+                foreach(var fieldItem in fieldInfo.Items)
+                {
+                    fieldItem.FieldId = fieldId;
+                }
+
+                FieldItemDao.InsertItems(fieldInfo.Items);
                 isChanged = true;
             }
             catch (Exception ex)

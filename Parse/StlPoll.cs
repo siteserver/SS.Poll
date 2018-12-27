@@ -178,7 +178,8 @@ namespace SS.Poll.Parse
 ";
             }
 
-            var pluginUrl = Context.PluginApi.GetPluginUrl(Main.PluginId);
+            var pluginUrl = Context.PluginApi.GetPluginUrl(Main.PluginId, "assets");
+            var pluginUrlCss = Context.PluginApi.GetPluginUrl(Main.PluginId, "css");
             var apiUrlSubmit = $"{Context.PluginApi.GetPluginApiUrl(Main.PluginId)}/{nameof(ApiSubmit)}/{pollInfo.Id}";
             var imgUrl = $"{Context.PluginApi.GetPluginApiUrl(Main.PluginId)}/code/{pollInfo.Id}";
             var submitHtml = string.Empty;
@@ -234,7 +235,7 @@ namespace SS.Poll.Parse
             }
 
             return $@"
-<link rel=""stylesheet"" type=""text/css"" href=""{pluginUrl}/css/base.css"" />
+<link rel=""stylesheet"" type=""text/css"" href=""{pluginUrlCss}/base.css"" />
   <div id=""poll{pollInfo.Id}"">
     
     <template v-if=""isTimeout && timeToStart > new Date()"">
@@ -288,9 +289,9 @@ namespace SS.Poll.Parse
 
   </div>
 
-  <script src=""{pluginUrl}/assets/js/vue-2.1.10.min.js"" type=""text/javascript""></script>
-  <script src=""{pluginUrl}/assets/js/vee-validate.js"" type=""text/javascript""></script>
-  <script src=""{pluginUrl}/assets/js/jquery.min.js"" type=""text/javascript""></script>
+  <script src=""{pluginUrl}/js/vue-2.1.10.min.js"" type=""text/javascript""></script>
+  <script src=""{pluginUrl}/js/vee-validate.js"" type=""text/javascript""></script>
+  <script src=""{pluginUrl}/js/jquery.min.js"" type=""text/javascript""></script>
   <script type=""text/javascript"">
     Vue.use(VeeValidate);
     new Vue({{
