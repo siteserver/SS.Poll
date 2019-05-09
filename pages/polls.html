@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>SiteServer 管理后台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      href="../assets/css/font-awesome-4.7.0.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="../assets/css/bootstrap-4.1.0.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="../assets/css/siteserver-1.0.7.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <style>
+      .nav .nav-link {
+        font-weight: normal;
+        border-radius: 1.25rem;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body class="m-2">
+    <div id="main">
+      <template v-if="pageLoad">
+        <div class="card-box">
+          <h4 v-if="pageType === 'list'" class="m-t-0 m-b-30 header-title">
+            投票管理
+          </h4>
+          <h4 v-if="pageType === 'add'" class="m-t-0 m-b-30 header-title">
+            新增投票
+          </h4>
+          <h4 v-if="pageType === 'edit'" class="m-t-0 m-b-30 header-title">
+            修改投票
+          </h4>
+          <div
+            v-if="pageAlert"
+            class="alert"
+            v-bind:class="{ 'alert-warning': pageAlert.type === 'warning', 'alert-success': pageAlert.type === 'success', 'alert-danger': pageAlert.type === 'danger' }"
+          >
+            <button
+              v-on:click="pageAlert = null"
+              class="close"
+              data-dismiss="alert"
+            >
+              ×
+            </button>
+            <span v-html="pageAlert.html"></span>
+          </div>
+          <template v-if="pageType === 'list'">
+            <div class="table-responsive">
+              <table class="table tablesaw table-hover m-0">
+                <thead>
+                  <tr>
+                    <th>投票名称</th>
+                    <th>投票简介</th>
+                    <th class="text-center">添加时间</th>
+                    <th class="text-center">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="pollInfo in pollInfoList">
+                    <td>
+                      <a href="javascript:;" @click="btnViewClick(pollInfo.id)">
+                        {{ pollInfo.title }}
+                      </a>
+                    </td>
+                    <td>{{ pollInfo.description }}</td>
+                    <td class="text-center">{{ pollInfo.addDate }}</td>
+                    <td class="text-center">
+                      <a href="javascript:;" v-on:click="btnUpClick(pollInfo)">
+                        上升
+                      </a>
+                      <a
+                        class="ml-2"
+                        href="javascript:;"
+                        v-on:click="btnDownClick(pollInfo)"
+                      >
+                        下降
+                      </a>
+                      <a
+                        class="ml-2"
+                        href="javascript:;"
+                        v-on:click="btnEditClick(pollInfo)"
+                      >
+                        编辑
+                      </a>
+                      <a
+                        class="ml-2"
+                        href="javascript:;"
+                        v-on:click="btnExportClick(pollInfo)"
+                      >
+                        导出
+                      </a>
+                      <a
+                        class="text-danger ml-2"
+                        href="javascript:;"
+                        v-on:click="btnDeleteClick(pollInfo)"
+                      >
+                        删除
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <hr />
+            <a
+              href="javascript:;"
+              v-on:click="btnAddClick"
+              class="btn btn-sm btn-outline-primary pl-3 pr-3"
+            >
+              <i class="fa fa-plus"></i> 新增投票
+            </a>
+            <file-upload
+            class="btn btn-sm btn-outline-primary pl-3 pr-3"
+            :post-action="uploadUrl"
+            extensions="zip"
+            :multiple="false"
+            v-model="files"
+            v-on:input-file="inputFile"
+            @input-filter="inputFilter"
+            ref="import"
+          >
+            <i class="fa fa-upload"></i> 导入投票
+          </file-upload>
+            
+          </template>
+          <template v-else>
+            <div class="form-group">
+              <label>
+                投票名称
+                <small v-show="errors.has('title')" class="text-danger">{{
+                  errors.first("title")
+                }}</small>
+              </label>
+              <input
+                v-model="pollInfo.title"
+                name="title"
+                data-vv-as="投票名称"
+                v-validate="'required'"
+                :class="{'is-invalid': errors.has('title') }"
+                type="text"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group">
+              <label> 投票简介 </label>
+              <textarea
+                v-model="pollInfo.description"
+                class="form-control"
+              ></textarea>
+            </div>
+            <hr />
+            <div class="text-center">
+              <button class="btn btn-primary m-r-5" v-on:click="btnSubmitClick">
+                保 存
+              </button>
+              <button class="btn m-r-5" v-on:click="pageType = 'list'">
+                返 回
+              </button>
+            </div>
+          </template>
+        </div>
+      </template>
+      <template v-else>
+        <div class="text-center" style="margin-top: 100px">
+          <img class="mt-3" src="../assets/images/loading.gif" />
+          <p class="lead mt-3 text-nowrap">载入中，请稍后...</p>
+        </div>
+      </template>
+    </div>
+  </body>
+</html>
+<script src="../assets/lib/es6-promise.auto.min.js"></script>
+<script src="../assets/lib/axios-0.18.0.min.js"></script>
+<script src="../assets/lib/jquery-1.9.1.min.js"></script>
+<script src="../assets/lib/layer/layer-3.1.1.js"></script>
+<script src="../assets/lib/vue-2.6.10.min.js"></script>
+
+<link href="../assets/lib/vue-multiselect/style-2.1.0.min.css" rel="stylesheet" type="text/css" />
+<script src="../assets/lib/vue-multiselect/script-2.1.0.min.js" type="text/javascript"></script>
+
+<script src="../assets/lib/vee-validate/vee-validate-2.2.2.js"></script>
+<script src="../assets/lib/vee-validate/locale/zh_CN-2.2.2.js"></script>
+<script src="../assets/js/validate.js"></script>
+
+<script src="../assets/lib/sweetalert2-7.28.4.all.min.js"></script>
+<script src="../assets/js/swal2.js"></script>
+
+<script src="../assets/lib/vue-upload-component-2.8.14.js" type="text/javascript"></script>
+
+<script src="../assets/js/utils.js"></script>
+<script src="polls.js" type="text/javascript"></script>

@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>SiteServer 管理后台</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link
+      href="../assets/css/font-awesome-4.7.0.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="../assets/css/bootstrap-4.1.0.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="../assets/css/siteserver-1.0.7.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+</head>
+
+<body>
+  <div id="main" class="m-t-15 m-b-15 m-l-15 m-r-15">
+    <template v-if="pageLoad">
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label class="col-form-label"> 字段名称 <small v-show="errors.has('title')" class="text-danger">{{
+              errors.first('title') }}</small>
+          </label>
+          <input :disabled="(fieldId && fieldId.length > 0 ? true : false)" v-model="fieldInfo.title"
+            name="title" data-vv-as="字段名称" v-validate="'required'" :class="{'is-invalid':
+errors.has('title') }" type="text"
+            class="form-control">
+        </div>
+        <div class="form-group col-md-4">
+          <label class="col-form-label"> 排序（0代表不设置） <small v-show="errors.has('taxis')" class="text-danger">{{
+              errors.first('taxis') }}</small>
+          </label>
+          <input v-model="fieldInfo.taxis" name="taxis" data-vv-as="排序" v-validate="'required|numeric'" :class="{'is-invalid':
+errors.has('taxis') }"
+            type="text" class="form-control">
+        </div>
+        <div class="form-group col-md-4">
+          <label class="col-form-label">表单提交类型</label>
+          <select v-model="fieldInfo.fieldType" class="form-control">
+            <option value="Text">文本框(单行)</option>
+            <option value="TextArea">文本框(多行)</option>
+            <option value="CheckBox">复选框</option>
+            <option value="Radio">单选框</option>
+            <option value="SelectOne">下拉列表(单选)</option>
+            <option value="SelectMultiple">下拉列表(多选)</option>
+            <option value="Date">日期选择框</option>
+            <option value="DateTime">日期时间选择框</option>
+            <option value="Hidden">隐藏</option>
+          </select>
+        </div>
+      </div>
+      <template v-if="fieldInfo.fieldType === 'TextArea'">
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label class="col-form-label"> 文本框高度（0代表默认高度） <small v-show="errors.has('height')" class="text-danger">{{
+                errors.first('height') }}</small>
+            </label>
+            <input v-model="fieldInfo.height" name="height" data-vv-as="文本框高度" v-validate="'required|numeric'" :class="{'is-invalid':
+          errors.has('height') }"
+              type="text" class="form-control">
+          </div>
+        </div>
+      </template>
+      <template v-else-if="fieldInfo.fieldType === 'CheckBox' || fieldInfo.fieldType === 'Radio' || fieldInfo.fieldType === 'SelectOne' || fieldInfo.fieldType === 'SelectMultiple'">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label class="col-form-label"> 设置选项 </label>
+            <select v-model="isRapid" class="form-control">
+              <option :value="true">快速设置</option>
+              <option :value="false">详细设置</option>
+            </select>
+          </div>
+          <template v-if="fieldInfo.fieldType==='CheckBox' || fieldInfo.fieldType==='Radio'">
+            <div class="form-group col-md-6">
+              <label class="col-form-label"> 选项排列方式 </label>
+              <select v-model="fieldInfo.columns" class="form-control">
+                <option :value="0">水平方向排列</option>
+                <option :value="1">垂直方向排列</option>
+              </select>
+            </div>
+          </template>
+        </div>
+        <div v-if="isRapid" class="form-group">
+          <label class="col-form-label"> 选项可选值（多个选项使用换行分隔） <small v-show="errors.has('rapidValues')" class="text-danger">{{
+              errors.first('rapidValues') }}</small>
+          </label>
+          <textarea style="height: 180px" v-model="rapidValues" name="rapidValues" data-vv-as="选项可选值" v-validate="'required'"
+            :class="{'is-invalid':errors.has('rapidValues') }" type="text" class="form-control"></textarea>
+        </div>
+        <div v-if="!isRapid" v-for="(itemInfo, index) in fieldInfo.items" class="form-row">
+          <div class="form-group col-md-3">
+            <label class="col-form-label">&nbsp;</label>
+            <div class="text-right form-text">第 {{ index + 1 }} 项</div>
+          </div>
+          <div class="form-group col-md-6">
+            <label class="col-form-label"> 选项 <small v-show="errors.has('value_' + index)" class="text-danger">{{
+                errors.first('value_' + index) }}</small>
+            </label>
+            <input type="text" v-model="itemInfo.value" :name="'value_' + index" data-vv-as="选项标题" v-validate="'required'"
+              :class="{'is-invalid':errors.has('value_' + index) }" class="form-control">
+          </div>
+          <div class="form-group col-md-3">
+            <label class="col-form-label">&nbsp;</label>
+            <div>
+              <span v-show="fieldInfo.fieldType==='CheckBox' || fieldInfo.fieldType==='SelectMultiple'" class="checkbox checkbox-primary mt-2">
+                <input type="checkbox" v-model="itemInfo.isSelected">
+                <label v-on:click="itemInfo.isSelected = !itemInfo.isSelected">默认选择</label>
+              </span>
+              <span v-show="fieldInfo.fieldType==='Radio' || fieldInfo.fieldType==='SelectOne'" class="radio radio-primary mt-2">
+                <input type="radio" :value="true" v-model="itemInfo.isSelected">
+                <label v-on:click="btnRadioClick(index)">默认选择</label>
+              </span>
+              <button type="button" class="btn btn-sm btn-default m-l-5" v-on:click="btnItemInfoRemoveClick(index)">删
+                除</button>
+              <button v-if="index + 1 === fieldInfo.items.length" type="button" class="btn btn-sm btn-primary m-l-5"
+                v-on:click="btnItemInfoAddClick">新 增</button>
+            </div>
+          </div>
+        </div>
+      </template>
+      <hr />
+      <div class="text-right mr-1">
+        <button type="button" class="btn btn-primary m-l-5" v-on:click="btnSubmitClick">确 定</button>
+        <button type="button" class="btn btn-default m-l-5" onclick="window.parent.layer.closeAll()">取 消</button>
+      </div>
+    </template>
+    <template v-else>
+      <div class="text-center" style="margin-top: 100px">
+        <img class="mt-3" src="../assets/images/loading.gif" />
+        <p class="lead mt-3 text-nowrap">载入中，请稍后...</p>
+      </div>
+    </template>
+  </div>
+</body>
+
+</html>
+<script src="../assets/lib/es6-promise.auto.min.js"></script>
+<script src="../assets/lib/axios-0.18.0.min.js"></script>
+<script src="../assets/lib/jquery-1.9.1.min.js"></script>
+<script src="../assets/lib/layer/layer-3.1.1.js"></script>
+<script src="../assets/lib/vue-2.6.10.min.js"></script>
+
+<script src="../assets/lib/vue-upload-component-2.8.14.js" type="text/javascript"></script>
+
+<script src="../assets/lib/vee-validate/vee-validate-2.2.2.js"></script>
+<script src="../assets/lib/vee-validate/locale/zh_CN-2.2.2.js"></script>
+<script src="../assets/js/validate.js"></script>
+
+<script src="../assets/lib/sweetalert2-7.28.4.all.min.js"></script>
+<script src="../assets/js/swal2.js"></script>
+
+<script src="../assets/js/utils.js"></script>
+<script src="fieldsLayerModel.js"></script>

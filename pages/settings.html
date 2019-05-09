@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>SiteServer 管理后台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      href="../assets/css/font-awesome-4.7.0.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="../assets/css/bootstrap-4.1.0.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="../assets/css/siteserver-1.0.7.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <style>
+      .nav .nav-link {
+        font-weight: normal;
+        border-radius: 1.25rem;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body class="m-2">
+    <div id="main">
+      <template v-if="pageLoad">
+        <div class="card-box">
+          <div class="mb-3">
+            <ul class="nav nav-pills nav-justified">
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="javascript:;"
+                  @click="{btnNavClick('items.html')}"
+                >
+                  投票项管理
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="javascript:;"
+                  @click="{btnNavClick('fields.html')}"
+                >
+                  提交字段管理
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  href="javascript:;"
+                  @click="{btnNavClick('settings.html')}"
+                >
+                  投票选项
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="javascript:;"
+                  @click="{btnNavClick('logs.html')}"
+                >
+                  投票提交记录
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="javascript:;"
+                  @click="{btnReturnClick()}"
+                >
+                  <i class="fa fa-reply-all"></i>
+                  返回列表
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <hr />
+
+          <div
+            v-if="pageAlert"
+            class="alert"
+            v-bind:class="{ 'alert-warning': pageAlert.type === 'warning', 'alert-success': pageAlert.type === 'success', 'alert-danger': pageAlert.type === 'danger' }"
+          >
+            <button
+              v-on:click="pageAlert = null"
+              class="close"
+              data-dismiss="alert"
+            >
+              ×
+            </button>
+            <span v-html="pageAlert.html"></span>
+          </div>
+
+          <template v-if="pageType === 'list'">
+            <p class="text-muted font-14">请点击链接更改投票设置</p>
+            <table class="table table-bordered table-striped">
+              <tbody>
+                <tr>
+                  <td width="35%">投票状态</td>
+                  <td width="65%">
+                    <a
+                      href="javascript:;"
+                      v-on:click="pageType = 'isClosed'"
+                      class="editable"
+                    >
+                      <span v-if="!pollInfo.isClosed">启用投票</span>
+                      <span v-if="pollInfo.isClosed">禁用投票</span>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>投票名称</td>
+                  <td>
+                    <a
+                      href="javascript:;"
+                      v-on:click="pageType = 'title'"
+                      class="editable"
+                    >
+                      {{ pollInfo.title ? pollInfo.title : "点击设置" }}
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>投票简介</td>
+                  <td>
+                    <a
+                      href="javascript:;"
+                      v-on:click="pageType = 'description'"
+                      class="editable"
+                    >
+                      {{
+                        pollInfo.description
+                          ? pollInfo.description
+                          : "点击设置"
+                      }}
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>投票项展示</td>
+                  <td>
+                    <a
+                      href="javascript:;"
+                      v-on:click="pageType = 'isImage'"
+                      class="editable"
+                    >
+                      {{ getDisplaySettings() }}
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>投票项选项</td>
+                  <td>
+                    <a
+                      href="javascript:;"
+                      v-on:click="pageType = 'isCheckbox'"
+                      class="editable"
+                    >
+                      {{ getCheckSettings() }}
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>投票时间限制</td>
+                  <td>
+                    <a
+                      href="javascript:;"
+                      v-on:click="pageType = 'isTimeout'"
+                      class="editable"
+                    >
+                      {{ pollInfo.isTimeout ? "限制投票时间" : "不限制" }}
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>验证码</td>
+                  <td>
+                    <a
+                      href="javascript:;"
+                      v-on:click="pageType = 'isCaptcha'"
+                      class="editable"
+                    >
+                      {{ pollInfo.isCaptcha ? "提交时显示验证码" : "不显示" }}
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>向管理员发送短信通知</td>
+                  <td>
+                    <a
+                      href="javascript:;"
+                      v-on:click="pageType = 'isAdministratorSmsNotify'"
+                      class="editable"
+                    >
+                      {{
+                        pollInfo.isAdministratorSmsNotify
+                          ? "发送短信通知"
+                          : "不发送"
+                      }}
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>向管理员发送邮件通知</td>
+                  <td>
+                    <a
+                      href="javascript:;"
+                      v-on:click="pageType = 'isAdministratorMailNotify'"
+                      class="editable"
+                    >
+                      {{
+                        pollInfo.isAdministratorMailNotify
+                          ? "发送邮件通知"
+                          : "不发送"
+                      }}
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>向用户发送短信通知</td>
+                  <td>
+                    <a
+                      href="javascript:;"
+                      v-on:click="pageType = 'isUserSmsNotify'"
+                      class="editable"
+                    >
+                      {{
+                        pollInfo.isUserSmsNotify ? "发送短信通知" : "不发送"
+                      }}
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </template>
+          <template v-else-if="pageType === 'isClosed'">
+            <div class="form-group">
+              <label>投票状态</label>
+              <select v-model="pollInfo.isClosed" class="form-control">
+                <option v-bind:value="false">启用投票</option>
+                <option v-bind:value="true">禁用投票</option>
+              </select>
+              <small class="form-text text-muted"
+                >选择禁用将导致用户无法提交投票</small
+              >
+            </div>
+          </template>
+          <template v-else-if="pageType === 'title'">
+            <div class="form-group">
+              <label>
+                投票名称
+                <small v-if="errors.has('title')" class="text-danger">{{
+                  errors.first("title")
+                }}</small>
+              </label>
+              <input
+                v-model="pollInfo.title"
+                name="title"
+                data-vv-as="投票名称"
+                v-validate="'required'"
+                :class="{'is-invalid': errors.has('title') }"
+                type="text"
+                class="form-control"
+              />
+            </div>
+          </template>
+          <template v-else-if="pageType === 'description'">
+            <div class="form-group">
+              <label> 投票简介 </label>
+              <textarea
+                v-model="pollInfo.description"
+                class="form-control"
+              ></textarea>
+            </div>
+          </template>
+          <template v-else-if="pageType === 'isImage'">
+            <div class="form-group">
+              <label>投票项图片</label>
+              <select v-model="pollInfo.isImage" class="form-control">
+                <option :value="true">投票项包含图片</option>
+                <option :value="false">投票项不含图片</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>投票项链接</label>
+              <select v-model="pollInfo.isUrl" class="form-control">
+                <option :value="true">投票项包含链接</option>
+                <option :value="false">投票项不含链接</option>
+              </select>
+            </div>
+          </template>
+          <template v-else-if="pageType === 'isCheckbox'">
+            <div class="form-group">
+              <label>投票选项类型</label>
+              <select v-model="pollInfo.isCheckbox" class="form-control">
+                <option :value="true">多选投票项</option>
+                <option :value="false">单选投票项</option>
+              </select>
+            </div>
+            <div v-if="pollInfo.isCheckbox" class="form-group">
+              <label>
+                最少选择
+                <small v-if="errors.has('checkboxMin')" class="text-danger">{{
+                  errors.first("checkboxMin")
+                }}</small>
+              </label>
+              <input
+                v-model="pollInfo.checkboxMin"
+                name="checkboxMin"
+                key="checkboxMin"
+                data-vv-as="最少选择"
+                v-validate="'required|numeric'"
+                :class="{'is-invalid': errors.has('checkboxMin') }"
+                type="text"
+                class="form-control"
+              />
+              <small>0 代表不限制</small>
+            </div>
+            <div v-if="pollInfo.isCheckbox" class="form-group">
+              <label>
+                最多选择
+                <small v-if="errors.has('checkboxMax')" class="text-danger">{{
+                  errors.first("checkboxMax")
+                }}</small>
+              </label>
+              <input
+                v-model="pollInfo.checkboxMax"
+                name="checkboxMax"
+                key="checkboxMax"
+                data-vv-as="最多选择"
+                v-validate="'required|numeric'"
+                :class="{'is-invalid': errors.has('checkboxMax') }"
+                type="text"
+                class="form-control"
+              />
+              <small>0 代表不限制</small>
+            </div>
+          </template>
+          <template v-else-if="pageType === 'isTimeout'">
+            <div class="form-group">
+              <label>投票时间限制</label>
+              <select v-model="pollInfo.isTimeout" class="form-control">
+                <option :value="false">不限制</option>
+                <option :value="true">限制投票时间</option>
+              </select>
+            </div>
+            <div v-if="pollInfo.isTimeout" class="form-group">
+              <label>开始时间</label>
+              <div>
+                <date-picker
+                  style="width: 100%"
+                  v-model="pollInfo.timeToStart"
+                  type="datetime"
+                  format="YYYY年MM月DD日 HH:mm"
+                  :minute-step="1"
+                  :clearable="false"
+                  :editable="false"
+                ></date-picker>
+              </div>
+            </div>
+            <div v-if="pollInfo.isTimeout" class="form-group">
+              <label>结束时间</label>
+              <div>
+                <date-picker
+                  style="width: 100%"
+                  v-model="pollInfo.timeToEnd"
+                  type="datetime"
+                  format="YYYY年MM月DD日 HH:mm"
+                  :minute-step="1"
+                  :clearable="false"
+                  :editable="false"
+                ></date-picker>
+              </div>
+            </div>
+          </template>
+          <template v-else-if="pageType === 'isCaptcha'">
+            <div class="form-group">
+              <label>验证码</label>
+              <select v-model="pollInfo.isCaptcha" class="form-control">
+                <option :value="true">提交时显示验证码</option>
+                <option :value="false">不显示</option>
+              </select>
+            </div>
+          </template>
+          <template v-else-if="pageType === 'isAdministratorSmsNotify'">
+            <div class="form-group">
+              <label>向管理员发送短信通知</label>
+              <select
+                v-model="pollInfo.isAdministratorSmsNotify"
+                class="form-control"
+              >
+                <option :value="true">发送短信通知</option>
+                <option :value="false">不发送</option>
+              </select>
+              <small class="form-text text-muted"
+                >启用短信发送后将自动为每一条新增提交发送短信给指定手机</small
+              >
+            </div>
+            <div v-if="pollInfo.isAdministratorSmsNotify" class="form-group">
+              <label>
+                发送通知短信模板Id
+                <small
+                  v-if="errors.has('administratorSmsNotifyTplId')"
+                  class="text-danger"
+                  >{{ errors.first("administratorSmsNotifyTplId") }}</small
+                >
+              </label>
+              <input
+                v-model="pollInfo.administratorSmsNotifyTplId"
+                name="administratorSmsNotifyTplId"
+                data-vv-as="发送通知短信模板Id"
+                v-validate="'required'"
+                :class="{'is-invalid': errors.has('administratorSmsNotifyTplId') }"
+                type="text"
+                class="form-control"
+              />
+              <small class="form-text text-muted"
+                >需进入短信供应商模板管理界面，添加通知类短信模板并获取模板Id</small
+              >
+            </div>
+            <div v-if="pollInfo.isAdministratorSmsNotify" class="form-group">
+              <label> 短信模板包含变量 </label>
+              <div class="m-2">
+                <div
+                  v-for="attributeName in attributeNames"
+                  class="checkbox checkbox-primary form-check-inline"
+                >
+                  <input
+                    v-model="administratorSmsNotifyKeys"
+                    type="checkbox"
+                    :id="attributeName"
+                    :value="attributeName"
+                  />
+                  <label :for="attributeName">
+                    {{ getAttributeText(attributeName) }}
+                  </label>
+                </div>
+              </div>
+              <small class="form-text text-muted"
+                >请勾选短信模板文字中包含的变量，请确保变量名大小写一致</small
+              >
+            </div>
+            <div v-if="pollInfo.isAdministratorSmsNotify" class="form-group">
+              <label>
+                管理员接受短信通知手机号
+                <small
+                  v-if="errors.has('administratorSmsNotifyMobile')"
+                  class="text-danger"
+                  >{{ errors.first("administratorSmsNotifyMobile") }}</small
+                >
+              </label>
+              <input
+                v-model="pollInfo.administratorSmsNotifyMobile"
+                name="administratorSmsNotifyMobile"
+                data-vv-as="管理员接受短信通知手机号"
+                v-validate="'required|mobile'"
+                :class="{'is-invalid':
+errors.has('administratorSmsNotifyMobile') }"
+                type="text"
+                class="form-control"
+              />
+            </div>
+          </template>
+          <template v-else-if="pageType === 'isAdministratorMailNotify'">
+            <div class="form-group">
+              <label>向管理员发送邮件通知</label>
+              <select
+                v-model="pollInfo.isAdministratorMailNotify"
+                class="form-control"
+              >
+                <option :value="true">发送邮件通知</option>
+                <option :value="false">不发送</option>
+              </select>
+              <small class="form-text text-muted"
+                >启用邮件发送后将自动为每一条新增提交发送邮件给指定邮箱</small
+              >
+            </div>
+            <div v-if="pollInfo.isAdministratorMailNotify" class="form-group">
+              <label>
+                管理员接受邮件通知邮箱
+                <small
+                  v-if="errors.has('administratorMailNotifyAddress')"
+                  class="text-danger"
+                  >{{ errors.first("administratorMailNotifyAddress") }}</small
+                >
+              </label>
+              <input
+                v-model="pollInfo.administratorMailNotifyAddress"
+                name="administratorMailNotifyAddress"
+                data-vv-as="管理员接受邮件通知邮箱"
+                v-validate="'required|email'"
+                :class="{'is-invalid':
+errors.has('administratorMailNotifyAddress') }"
+                type="text"
+                class="form-control"
+              />
+            </div>
+          </template>
+          <template v-else-if="pageType === 'isUserSmsNotify'">
+            <div class="form-group">
+              <label>向用户发送短信通知</label>
+              <select v-model="pollInfo.isUserSmsNotify" class="form-control">
+                <option :value="true">发送短信通知</option>
+                <option :value="false">不发送</option>
+              </select>
+              <small class="form-text text-muted"
+                >启用短信发送后将自动向信息提交人发送提交成功短信</small
+              >
+            </div>
+            <div v-if="pollInfo.isUserSmsNotify" class="form-group">
+              <label>
+                发送通知短信模板Id
+                <small
+                  v-if="errors.has('userSmsNotifyTplId')"
+                  class="text-danger"
+                  >{{ errors.first("userSmsNotifyTplId") }}</small
+                >
+              </label>
+              <input
+                v-model="pollInfo.userSmsNotifyTplId"
+                name="userSmsNotifyTplId"
+                data-vv-as="发送通知短信模板Id"
+                v-validate="'required'"
+                :class="{'is-invalid': errors.has('userSmsNotifyTplId') }"
+                type="text"
+                class="form-control"
+              />
+              <small class="form-text text-muted"
+                >需进入短信供应商模板管理界面，添加通知类短信模板并获取模板Id</small
+              >
+            </div>
+            <div v-if="pollInfo.isUserSmsNotify" class="form-group">
+              <label> 短信模板包含变量 </label>
+              <div class="m-2">
+                <div
+                  v-for="attributeName in attributeNames"
+                  class="checkbox checkbox-primary form-check-inline"
+                >
+                  <input
+                    v-model="userSmsNotifyKeys"
+                    type="checkbox"
+                    :id="attributeName"
+                    :value="attributeName"
+                  />
+                  <label :for="attributeName">
+                    {{ getAttributeText(attributeName) }}
+                  </label>
+                </div>
+              </div>
+              <small class="form-text text-muted"
+                >请勾选短信模板文字中包含的变量，请确保变量名大小写一致</small
+              >
+            </div>
+            <div v-if="pollInfo.isUserSmsNotify" class="form-group">
+              <label>
+                手机号码字段
+                <small
+                  v-if="errors.has('userSmsNotifyMobileName')"
+                  class="text-danger"
+                  >{{ errors.first("userSmsNotifyMobileName") }}</small
+                >
+              </label>
+              <select
+                v-model="pollInfo.userSmsNotifyMobileName"
+                name="userSmsNotifyMobileName"
+                data-vv-as="手机号码字段"
+                v-validate="'required'"
+                :class="{'is-invalid': errors.has('userSmsNotifyMobileName') }"
+                class="form-control"
+              >
+                <option
+                  v-for="fieldInfo in fieldInfoList"
+                  :value="fieldInfo.title"
+                  >{{ fieldInfo.title }}</option
+                >
+              </select>
+              <small class="form-text text-muted"
+                >请选择投票字段中设置的手机号码字段，信息提交后将向此发送短信</small
+              >
+            </div>
+          </template>
+          <div v-if="pageType !== 'list'">
+            <hr />
+            <div class="text-center">
+              <button
+                class="btn btn-primary m-r-5"
+                v-on:click="btnSubmitClick"
+              >
+                保 存
+              </button>
+              <button class="btn m-r-5" v-on:click="pageType = 'list'">
+                返 回
+              </button>
+            </div>
+          </div>
+          
+        </div>
+      </template>
+      <template v-else>
+        <div class="text-center" style="margin-top: 100px">
+          <img class="mt-3" src="../assets/images/loading.gif" />
+          <p class="lead mt-3 text-nowrap">载入中，请稍后...</p>
+        </div>
+      </template>
+    </div>
+  </body>
+</html>
+<script src="../assets/lib/es6-promise.auto.min.js"></script>
+<script src="../assets/lib/axios-0.18.0.min.js"></script>
+<script src="../assets/lib/jquery-1.9.1.min.js"></script>
+<script src="../assets/lib/layer/layer-3.1.1.js"></script>
+<script src="../assets/lib/vue-2.6.10.min.js"></script>
+
+<script src="../assets/lib/vue2-datepicker-2.4.3.min.js"></script>
+
+<script src="../assets/lib/vee-validate/vee-validate-2.2.2.js"></script>
+<script src="../assets/lib/vee-validate/locale/zh_CN-2.2.2.js"></script>
+<script src="../assets/js/validate.js"></script>
+
+<script src="../assets/lib/sweetalert2-7.28.4.all.min.js"></script>
+<script src="../assets/js/swal2.js"></script>
+
+<script src="../assets/js/utils.js"></script>
+<script src="settings.js" type="text/javascript"></script>
