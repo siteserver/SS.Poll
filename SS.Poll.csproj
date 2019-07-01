@@ -13,7 +13,7 @@
     <Description>使用完整的图片投票解决方案来获得您需要的答案</Description>
     <PackageLicense>GPL-3.0</PackageLicense>
     <PackageProjectUrl>https://github.com/siteserver/SS.Poll</PackageProjectUrl>
-    <PackageIconUrl>https://www.siteserver.cn/docs/SS.Poll/logo.svg</PackageIconUrl>
+    <PackageIconUrl>https://www.siteserver.cn/docs/ss/poll/logo.svg</PackageIconUrl>
     <Copyright>Copyright © SiteServer CMS</Copyright>
     <PackageTags>SiteServer CMS Poll Plugin</PackageTags>
     <RepositoryUrl>https://github.com/siteserver/SS.Poll</RepositoryUrl>
