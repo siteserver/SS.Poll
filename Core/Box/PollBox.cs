@@ -313,7 +313,7 @@ namespace SS.Poll.Core.Box
             {
                 Title = new AtomContentConstruct("title", "siteserver channel"),
                 Author = new AtomPersonConstruct("author",
-                    "siteserver", new Uri("http://www.siteserver.cn")),
+                    "siteserver", new Uri("https://sscms.com")),
                 Modified = new AtomDateConstruct("modified", DateTime.Now,
                     TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now))
             };
@@ -325,7 +325,7 @@ namespace SS.Poll.Core.Box
         {
             var entry = new AtomEntry
             {
-                Id = new Uri("http://www.siteserver.cn/"),
+                Id = new Uri("https://sscms.com/"),
                 Title = new AtomContentConstruct("title", "title"),
                 Modified = new AtomDateConstruct("modified", DateTime.Now,
                     TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now)),
